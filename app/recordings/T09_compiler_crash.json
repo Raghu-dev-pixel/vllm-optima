@@ -1,0 +1,192 @@
+{
+ "title": "T09 · Compiler crash: diagnosed and fixed",
+ "model": "Qwen/Qwen2.5-0.5B-Instruct",
+ "recorded": "2026-10-10",
+ "events": [
+  {
+   "type": "gpu",
+   "text": "Detected Tesla T4 x1 (15360 MiB, compute 7.5), vLLM 0.31.0",
+   "time": "04:18:29",
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   }
+  },
+  {
+   "type": "start",
+   "text": "Mode: expert | starting settings: {'compilation_config': {'backend': 'does_not_exist'}}",
+   "time": "04:18:29",
+   "mode": "expert",
+   "start": {
+    "compilation_config": {
+     "backend": "does_not_exist"
+    }
+   }
+  },
+  {
+   "type": "running",
+   "text": "running Qwen/Qwen2.5-0.5B-Instruct (1.0 GB) with {'compilation_config': {'backend': 'does_not_exist'}} ...",
+   "time": "04:18:30"
+  },
+  {
+   "type": "failed",
+   "text": "FAILED: (EngineCore pid=13735) ERROR 10-10 04:18:58 [core.py:1433] ValueError: not enough values to unpack (expected 2, got 1) Process EngineCore:",
+   "time": "04:19:01",
+   "cause": "(EngineCore pid=13735) ERROR 10-10 04:18:58 [core.py:1433]     module_name, obj_name = qualname.rsplit(\".\", 1)\n(EngineCore pid=13735) ERROR 10-10 04:18:58 [core.py:1433]     ^^^^^^^^^^^^^^^^^^^^^\n(EngineCore pid=13735) ERROR 10-10 04:18:58 [core.py:1433] ValueError: not enough values to unpack (expected 2, got 1)\nProcess EngineCore:\nTraceback (most recent call last):\n  File \"/usr/lib/python3.12/multiprocessing/process.py\", line 314, in _bootstrap",
+   "log": "vllm-env/lib/python3.12/site-packages/vllm/tracing/otel.py\", line 175, in sync_wrapper\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/model_executor/model_loader/utils.py\", line 95, in initialize_model\n    model = model_class(vllm_config=vllm_config, prefix=prefix)\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/model_executor/models/qwen2.py\", line 475, in __init__\n    self.model = Qwen2Model(\n                 ^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/compilation/decorators.py\", line 406, in __init__\n    TorchCompileWithNoGuardsWrapper.__init__(\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/compilation/wrapper.py\", line 89, in __init__\n    backend = vllm_config.compilation_config.init_backend(\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/config/compilation.py\", line 1110, in init_backend\n    return VllmBackend(vllm_config, prefix=prefix, is_encoder=is_encoder)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/compilation/backends.py\", line 855, in __init__\n    self.compiler_manager: CompilerManager = CompilerManager(\n                                             ^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/compilation/backends.py\", line 143, in __init__\n    self.compiler = make_compiler(compilation_config)\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/compilation/backends.py\", line 120, in make_compiler\n    compiler = resolve_obj_by_qualname(current_platform.get_compile_backend())()\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/utils/import_utils.py\", line 122, in resolve_obj_by_qualname\n    module_name, obj_name = qualname.rsplit(\".\", 1)\n    ^^^^^^^^^^^^^^^^^^^^^\nValueError: not enough values to unpack (expected 2, got 1)\nTraceback (most recent call last):\n  File \"/content/test_run.py\", line 13, in <module>\n    llm = LLM(model=model, **settings)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/entrypoints/llm.py\", line 344, in __init__\n    self.llm_engine = LLMEngine.from_engine_args(\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/llm_engine.py\", line 185, in from_engine_args\n    return cls(\n           ^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/llm_engine.py\", line 111, in __init__\n    self.engine_core = EngineCoreClient.make_client(\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core_client.py\", line 126, in make_client\n    return SyncMPClient(\n           ^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/tracing/otel.py\", line 175, in sync_wrapper\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core_client.py\", line 917, in __init__\n    super().__init__(\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core_client.py\", line 674, in __init__\n    with launch_core_engines(\n  File \"/usr/lib/python3.12/contextlib.py\", line 144, in __exit__\n    next(self.gen)\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/utils.py\", line 1268, in launch_core_engines\n    wait_for_engine_startup(\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/utils.py\", line 1348, in wait_for_engine_startup\n    raise RuntimeError(\nRuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}\n"
+  },
+  {
+   "type": "asking",
+   "text": "Asking Nemotron-3_5-Lightning for a fix ...",
+   "time": "04:19:01",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning"
+  },
+  {
+   "type": "checking",
+   "text": "Nemotron wants to give up; checking the web first ...",
+   "time": "04:20:13"
+  },
+  {
+   "type": "search",
+   "text": "Searched the web (Tavily): 3 relevant result(s)",
+   "time": "04:20:16",
+   "results": [
+    {
+     "title": "[Bug]: ValueError: too many values to unpack (expected 2)",
+     "url": "https://github.com/vllm-project/vllm/issues/35950"
+    },
+    {
+     "title": "[Bug]: Fail to run Qwen3-Next-80B-A3B-Instruct vllm with CPU backend · Issue #30533 · vllm-project/vllm · GitHub",
+     "url": "https://github.com/vllm-project/vllm/issues/30533"
+    },
+    {
+     "title": "[Bug]: Too many values to unpack in ...",
+     "url": "https://github.com/vllm-project/vllm/issues/25771"
+    }
+   ]
+  },
+  {
+   "type": "asking",
+   "text": "Asking Nemotron-3-Ultra-550b-a55b again, with the web results ...",
+   "time": "04:20:16",
+   "nemotron": "nvidia/Nemotron-3-Ultra-550b-a55b"
+  },
+  {
+   "type": "fix",
+   "text": "Fix 1: The compilation_config backend 'does_not_exist' is invalid; replaced with default 'inductor' backend to fix the qualname unpacking error.",
+   "time": "04:20:19",
+   "nemotron": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "reason": "The compilation_config backend 'does_not_exist' is invalid; replaced with default 'inductor' backend to fix the qualname unpacking error.",
+   "source": "https://github.com/vllm-project/vllm/issues/35950",
+   "changes": {
+    "dtype": "half",
+    "kv_cache_dtype": "auto",
+    "tensor_parallel_size": 1,
+    "max_num_seqs": 128,
+    "compilation_config": {
+     "backend": "inductor"
+    }
+   },
+   "removed": [],
+   "new_model": null
+  },
+  {
+   "type": "running",
+   "text": "running Qwen/Qwen2.5-0.5B-Instruct (1.0 GB) with {'dtype': 'half', 'kv_cache_dtype': 'auto', 'tensor_parallel_size': 1, 'max_num_seqs': 128, 'compilation_config': {'backend': 'inductor'}} ...",
+   "time": "04:20:19"
+  },
+  {
+   "type": "done",
+   "text": "WORKS on Tesla T4 (expert mode, fixed after 1 failure(s))",
+   "time": "04:21:15",
+   "ok": true,
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   },
+   "mode": "expert",
+   "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+   "model": "Qwen/Qwen2.5-0.5B-Instruct",
+   "settings": {
+    "dtype": "half",
+    "kv_cache_dtype": "auto",
+    "tensor_parallel_size": 1,
+    "max_num_seqs": 128,
+    "compilation_config": {
+     "backend": "inductor"
+    }
+   },
+   "start": {
+    "compilation_config": {
+     "backend": "does_not_exist"
+    }
+   },
+   "metrics": {
+    "tokens_per_s": 5374,
+    "ms_per_token": 5.7,
+    "gpu_memory_gb": 13.3,
+    "load_s": 38,
+    "accuracy": "3/4",
+    "context": 32768
+   },
+   "rows": [
+    {
+     "setting": "compilation_config",
+     "requested": {
+      "backend": "does_not_exist"
+     },
+     "delivered": {
+      "backend": "inductor"
+     },
+     "changed": true
+    },
+    {
+     "setting": "dtype",
+     "requested": "(default)",
+     "delivered": "half",
+     "changed": true
+    },
+    {
+     "setting": "kv_cache_dtype",
+     "requested": "(default)",
+     "delivered": "auto",
+     "changed": true
+    },
+    {
+     "setting": "max_num_seqs",
+     "requested": "(default)",
+     "delivered": 128,
+     "changed": true
+    },
+    {
+     "setting": "tensor_parallel_size",
+     "requested": "(default)",
+     "delivered": 1,
+     "changed": true
+    }
+   ],
+   "failures": 1,
+   "lessons": 6,
+   "sources": [
+    "https://github.com/vllm-project/vllm/issues/35950"
+   ],
+   "engine": {
+    "kv_cache_tokens": 1031296,
+    "max_num_seqs": 128,
+    "max_num_batched_tokens": 8192,
+    "gpu_memory_utilization": 0.92
+   },
+   "causes": [
+    "ValueError: not enough values to unpack (expected 2, got 1) Process EngineCore:"
+   ],
+   "inference_py": "# Tested by the agent on: Tesla T4 x1, vLLM 0.31.0\n# Use the same GPU type and vLLM version, or run the agent again on your GPU.\nfrom vllm import LLM, SamplingParams\n\nif __name__ == \"__main__\":\n    llm = LLM(model='Qwen/Qwen2.5-0.5B-Instruct', **{'dtype': 'half', 'kv_cache_dtype': 'auto', 'tensor_parallel_size': 1, 'max_num_seqs': 128, 'compilation_config': {'backend': 'inductor'}})\n    out = llm.chat([{\"role\": \"user\", \"content\": \"Hello! Who are you?\"}],\n                   SamplingParams(temperature=0.7, max_tokens=128))\n    print(out[0].outputs[0].text)\n",
+   "requirements": "vllm==0.31.0\n"
+  }
+ ]
+}

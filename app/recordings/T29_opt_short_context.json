@@ -1,0 +1,169 @@
+{
+ "title": "T29 · Phi-3.5 short context: slower option rejected",
+ "model": "microsoft/Phi-3.5-mini-instruct",
+ "recorded": "2026-10-10",
+ "events": [
+  {
+   "type": "gpu",
+   "text": "Detected Tesla T4 x1 (15360 MiB, compute 7.5), vLLM 0.31.0",
+   "time": "06:23:13",
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   }
+  },
+  {
+   "type": "start",
+   "text": "Mode: expert | starting settings: {'max_model_len': 2048}",
+   "time": "06:23:13",
+   "mode": "expert",
+   "start": {
+    "max_model_len": 2048
+   }
+  },
+  {
+   "type": "running",
+   "text": "running microsoft/Phi-3.5-mini-instruct (7.6 GB) with {'max_model_len': 2048} ...",
+   "time": "06:23:13"
+  },
+  {
+   "type": "done",
+   "text": "WORKS on Tesla T4 (expert mode, worked first time)",
+   "time": "06:26:16",
+   "ok": true,
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   },
+   "mode": "expert",
+   "model_id": "microsoft/Phi-3.5-mini-instruct",
+   "model": "microsoft/Phi-3.5-mini-instruct",
+   "settings": {
+    "max_model_len": 2048
+   },
+   "start": {
+    "max_model_len": 2048
+   },
+   "metrics": {
+    "tokens_per_s": 552,
+    "ms_per_token": 32.3,
+    "gpu_memory_gb": 13.1,
+    "load_s": 140,
+    "accuracy": "4/4",
+    "context": 2048
+   },
+   "rows": [
+    {
+     "setting": "max_model_len",
+     "requested": 2048,
+     "delivered": 2048,
+     "changed": false
+    }
+   ],
+   "failures": 0,
+   "lessons": 13,
+   "sources": [],
+   "engine": {
+    "kv_cache_tokens": 14192,
+    "max_num_seqs": 256,
+    "max_num_batched_tokens": 8192,
+    "gpu_memory_utilization": 0.92
+   },
+   "causes": [],
+   "inference_py": "# Tested by the agent on: Tesla T4 x1, vLLM 0.31.0\n# Use the same GPU type and vLLM version, or run the agent again on your GPU.\nfrom vllm import LLM, SamplingParams\n\nif __name__ == \"__main__\":\n    llm = LLM(model='microsoft/Phi-3.5-mini-instruct', **{'max_model_len': 2048})\n    out = llm.chat([{\"role\": \"user\", \"content\": \"Hello! Who are you?\"}],\n                   SamplingParams(temperature=0.7, max_tokens=128))\n    print(out[0].outputs[0].text)\n",
+   "requirements": "vllm==0.31.0\n"
+  },
+  {
+   "type": "opt_start",
+   "text": "Optimizing for this GPU",
+   "time": "06:27:04"
+  },
+  {
+   "type": "opt_asking",
+   "text": "Asking Nemotron-3_5-Lightning for a faster config ...",
+   "time": "06:27:04",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning",
+   "facts": "552 tok/s, 32.3 ms/token, context 2,048 tokens, KV cache 14,192 tokens, max_num_seqs 256"
+  },
+  {
+   "type": "candidate",
+   "text": "Increased max_model_len to 13700 (3% margin below measured KV cache tokens 14192) to allow bigger context within GPU memory headroom (13.1 GB used, 15 GB GPU, 0.92 utilization) without affecting 1-user latency or accuracy.",
+   "time": "06:27:49",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning",
+   "reason": "Increased max_model_len to 13700 (3% margin below measured KV cache tokens 14192) to allow bigger context within GPU memory headroom (13.1 GB used, 15 GB GPU, 0.92 utilization) without affecting 1-user latency or accuracy.",
+   "changes": {
+    "max_model_len": 13700
+   },
+   "removed": [],
+   "raw": "{\"changes\": {\"max_model_len\": 13700}, \"reason\": \"Increased max_model_len to 13700 (3% margin below measured KV cache tokens 14192) to allow bigger context within GPU memory headroom (13.1 GB used, 15 GB GPU, 0.92 utilization) without affecting 1-user latency or accuracy.\", \"already_best\": false}"
+  },
+  {
+   "type": "running",
+   "text": "running microsoft/Phi-3.5-mini-instruct (7.6 GB) with {'max_model_len': 13700} ...",
+   "time": "06:27:49"
+  },
+  {
+   "type": "measured",
+   "text": "518 tok/s · 54.4 ms/token · accuracy 4/4 · not better",
+   "time": "06:31:10",
+   "ok": false,
+   "metrics": {
+    "tokens_per_s": 518,
+    "ms_per_token": 54.4,
+    "gpu_memory_gb": 13.1,
+    "load_s": 144,
+    "accuracy": "4/4",
+    "context": 13700
+   }
+  },
+  {
+   "type": "opt_asking",
+   "text": "Asking Nemotron-3-Ultra-550b-a55b for a faster config ...",
+   "time": "06:31:10",
+   "nemotron": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "facts": "552 tok/s, 32.3 ms/token, context 2,048 tokens, KV cache 14,192 tokens, max_num_seqs 256"
+  },
+  {
+   "type": "candidate",
+   "text": "Increased max_num_batched_tokens from 8192 to 16384 to cover the benchmark's ~10,240 tokens (64 requests × 160 tokens) in a single forward pass, reducing kernel launches and improving throughput while staying within GPU memory headroom (13.1/15.36 GB used).",
+   "time": "06:31:20",
+   "nemotron": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "reason": "Increased max_num_batched_tokens from 8192 to 16384 to cover the benchmark's ~10,240 tokens (64 requests × 160 tokens) in a single forward pass, reducing kernel launches and improving throughput while staying within GPU memory headroom (13.1/15.36 GB used).",
+   "changes": {
+    "max_num_batched_tokens": 16384
+   },
+   "removed": [],
+   "raw": "{\"changes\": {\"max_num_batched_tokens\": 16384}, \"reason\": \"Increased max_num_batched_tokens from 8192 to 16384 to cover the benchmark's ~10,240 tokens (64 requests × 160 tokens) in a single forward pass, reducing kernel launches and improving throughput while staying within GPU memory headroom (13.1/15.36 GB used).\", \"already_best\": false}"
+  },
+  {
+   "type": "running",
+   "text": "running microsoft/Phi-3.5-mini-instruct (7.6 GB) with {'max_model_len': 2048, 'max_num_batched_tokens': 16384} ...",
+   "time": "06:31:20"
+  },
+  {
+   "type": "measured",
+   "text": "542 tok/s · 34.0 ms/token · accuracy 4/4 · not better",
+   "time": "06:34:30",
+   "ok": false,
+   "metrics": {
+    "tokens_per_s": 542,
+    "ms_per_token": 34.0,
+    "gpu_memory_gb": 12.6,
+    "load_s": 142,
+    "accuracy": "4/4",
+    "context": 2048
+   }
+  },
+  {
+   "type": "opt_none",
+   "text": "None of the tested configs was faster, so the working config stays.",
+   "time": "06:34:30"
+  }
+ ]
+}

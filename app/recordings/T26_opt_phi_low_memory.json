@@ -1,0 +1,219 @@
+{
+ "title": "T26 · Phi-3.5 low memory: fixed, optimizer keeps it",
+ "model": "microsoft/Phi-3.5-mini-instruct",
+ "recorded": "2026-10-10",
+ "events": [
+  {
+   "type": "gpu",
+   "text": "Detected Tesla T4 x1 (15360 MiB, compute 7.5), vLLM 0.31.0",
+   "time": "05:57:53",
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   }
+  },
+  {
+   "type": "start",
+   "text": "Mode: expert | starting settings: {'gpu_memory_utilization': 0.6, 'max_model_len': 4096}",
+   "time": "05:57:53",
+   "mode": "expert",
+   "start": {
+    "gpu_memory_utilization": 0.6,
+    "max_model_len": 4096
+   }
+  },
+  {
+   "type": "running",
+   "text": "running microsoft/Phi-3.5-mini-instruct (7.6 GB) with {'gpu_memory_utilization': 0.6, 'max_model_len': 4096} ...",
+   "time": "05:57:54"
+  },
+  {
+   "type": "failed",
+   "text": "FAILED: (EngineCore pid=41849) ERROR 10-10 05:59:09 [core.py:1433] ValueError: To serve at least one request with the model's max seq len (4096), (1.51 GiB KV cache is needed, which is larger than the availab",
+   "time": "05:59:11",
+   "cause": "(EngineCore pid=41849) ERROR 10-10 05:59:09 [core.py:1433]   File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/core/kv_cache_utils.py\", line 925, in _check_enough_kv_cache_memory\n(EngineCore pid=41849) ERROR 10-10 05:59:09 [core.py:1433]     raise ValueError(\n(EngineCore pid=41849) ERROR 10-10 05:59:09 [core.py:1433] ValueError: To serve at least one request with the model's max seq len (4096), (1.51 GiB KV cache is needed, which is larger than the available KV cache memory (0.53 GiB). Based on the available memory, the estimated maximum model length is 1424. Try increasing `gpu_memory_utilization` (which also controls CPU memory on the CPU backend) or decreasing `max_model_len` when initializing the engine. See https://docs.vllm.ai/en/latest/configuration/conserving_memory/ for more details.\n[transformers] This model config has set a `rope_parameters['original_max_position_embeddings']` field, to be used together with `max_position_embeddings` to determine a scaling factor. Please set the `factor` field of `rope_parameters`with this ratio instead -- we recommend the use of this field over `original_max_position_embeddings`, as it is compatible with most model architectures.\n\nLoading safetensors checkpoint shards:   0% Completed | 0/2 [00:00<?, ?it/s]",
+   "log": "  self.run()\n  File \"/usr/lib/python3.12/multiprocessing/process.py\", line 108, in run\n    self._target(*self._args, **self._kwargs)\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core.py\", line 1437, in run_engine_core\n    raise e\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core.py\", line 1395, in run_engine_core\n    engine_core = EngineCoreProc(*args, engine_index=dp_rank, **kwargs)\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/tracing/otel.py\", line 175, in sync_wrapper\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core.py\", line 1151, in __init__\n    super().__init__(\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core.py\", line 151, in __init__\n    kv_cache_config = self._initialize_kv_caches(vllm_config)\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/tracing/otel.py\", line 175, in sync_wrapper\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core.py\", line 320, in _initialize_kv_caches\n    kv_cache_configs = get_kv_cache_configs(\n                       ^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/core/kv_cache_utils.py\", line 2795, in get_kv_cache_configs\n    _check_enough_kv_cache_memory(\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/core/kv_cache_utils.py\", line 925, in _check_enough_kv_cache_memory\n    raise ValueError(\nValueError: To serve at least one request with the model's max seq len (4096), (1.51 GiB KV cache is needed, which is larger than the available KV cache memory (0.53 GiB). Based on the available memory, the estimated maximum model length is 1424. Try increasing `gpu_memory_utilization` (which also controls CPU memory on the CPU backend) or decreasing `max_model_len` when initializing the engine. See https://docs.vllm.ai/en/latest/configuration/conserving_memory/ for more details.\nTraceback (most recent call last):\n  File \"/content/test_run.py\", line 13, in <module>\n    llm = LLM(model=model, **settings)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/entrypoints/llm.py\", line 344, in __init__\n    self.llm_engine = LLMEngine.from_engine_args(\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/llm_engine.py\", line 185, in from_engine_args\n    return cls(\n           ^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/llm_engine.py\", line 111, in __init__\n    self.engine_core = EngineCoreClient.make_client(\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core_client.py\", line 126, in make_client\n    return SyncMPClient(\n           ^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/tracing/otel.py\", line 175, in sync_wrapper\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core_client.py\", line 917, in __init__\n    super().__init__(\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core_client.py\", line 674, in __init__\n    with launch_core_engines(\n  File \"/usr/lib/python3.12/contextlib.py\", line 144, in __exit__\n    next(self.gen)\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/utils.py\", line 1268, in launch_core_engines\n    wait_for_engine_startup(\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/utils.py\", line 1348, in wait_for_engine_startup\n    raise RuntimeError(\nRuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}\n"
+  },
+  {
+   "type": "asking",
+   "text": "Asking Nemotron-3_5-Lightning for a fix ...",
+   "time": "05:59:11",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning"
+  },
+  {
+   "type": "fix",
+   "text": "Fix 1: Tesla T4 compute capability 7.5 does not support bfloat16; setting dtype to 'half' and raising gpu_memory_utilization to 0.8 allocates sufficient KV cache memory for max_seq_len 4096.",
+   "time": "05:59:50",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning",
+   "reason": "Tesla T4 compute capability 7.5 does not support bfloat16; setting dtype to 'half' and raising gpu_memory_utilization to 0.8 allocates sufficient KV cache memory for max_seq_len 4096.",
+   "source": "",
+   "changes": {
+    "dtype": "half",
+    "gpu_memory_utilization": 0.8
+   },
+   "removed": [],
+   "new_model": null
+  },
+  {
+   "type": "running",
+   "text": "running microsoft/Phi-3.5-mini-instruct (7.6 GB) with {'dtype': 'half', 'gpu_memory_utilization': 0.8, 'max_model_len': 4096} ...",
+   "time": "05:59:50"
+  },
+  {
+   "type": "done",
+   "text": "WORKS on Tesla T4 (expert mode, fixed after 1 failure(s))",
+   "time": "06:02:04",
+   "ok": true,
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   },
+   "mode": "expert",
+   "model_id": "microsoft/Phi-3.5-mini-instruct",
+   "model": "microsoft/Phi-3.5-mini-instruct",
+   "settings": {
+    "dtype": "half",
+    "gpu_memory_utilization": 0.8,
+    "max_model_len": 4096
+   },
+   "start": {
+    "gpu_memory_utilization": 0.6,
+    "max_model_len": 4096
+   },
+   "metrics": {
+    "tokens_per_s": 526,
+    "ms_per_token": 40.5,
+    "gpu_memory_gb": 11.3,
+    "load_s": 87,
+    "accuracy": "4/4",
+    "context": 4096
+   },
+   "rows": [
+    {
+     "setting": "dtype",
+     "requested": "(default)",
+     "delivered": "half",
+     "changed": true
+    },
+    {
+     "setting": "gpu_memory_utilization",
+     "requested": 0.6,
+     "delivered": 0.8,
+     "changed": true
+    },
+    {
+     "setting": "max_model_len",
+     "requested": 4096,
+     "delivered": 4096,
+     "changed": false
+    }
+   ],
+   "failures": 1,
+   "lessons": 13,
+   "sources": [],
+   "engine": {
+    "kv_cache_tokens": 9408,
+    "max_num_seqs": 256,
+    "max_num_batched_tokens": 8192,
+    "gpu_memory_utilization": 0.8
+   },
+   "causes": [
+    "ValueError: To serve at least one request with the model's max seq len (4096), (1.51 GiB KV cache is needed, which is larger than the availab"
+   ],
+   "inference_py": "# Tested by the agent on: Tesla T4 x1, vLLM 0.31.0\n# Use the same GPU type and vLLM version, or run the agent again on your GPU.\nfrom vllm import LLM, SamplingParams\n\nif __name__ == \"__main__\":\n    llm = LLM(model='microsoft/Phi-3.5-mini-instruct', **{'dtype': 'half', 'gpu_memory_utilization': 0.8, 'max_model_len': 4096})\n    out = llm.chat([{\"role\": \"user\", \"content\": \"Hello! Who are you?\"}],\n                   SamplingParams(temperature=0.7, max_tokens=128))\n    print(out[0].outputs[0].text)\n",
+   "requirements": "vllm==0.31.0\n"
+  },
+  {
+   "type": "opt_start",
+   "text": "Optimizing for this GPU",
+   "time": "06:02:24"
+  },
+  {
+   "type": "opt_asking",
+   "text": "Asking Nemotron-3_5-Lightning for a faster config ...",
+   "time": "06:02:24",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning",
+   "facts": "526 tok/s, 40.5 ms/token, context 4,096 tokens, KV cache 9,408 tokens, max_num_seqs 256"
+  },
+  {
+   "type": "candidate",
+   "text": "Increasing gpu_memory_utilization from 0.8 to 0.9 (13.5 GB allowed vs 11.3 GB current used on 15 GB T4 GPU) provides additional KV cache capacity for the 64 concurrent requests, which can improve throughput without exceeding memory limits or degrading 1-user latency by more than 20%.",
+   "time": "06:03:07",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning",
+   "reason": "Increasing gpu_memory_utilization from 0.8 to 0.9 (13.5 GB allowed vs 11.3 GB current used on 15 GB T4 GPU) provides additional KV cache capacity for the 64 concurrent requests, which can improve throughput without exceeding memory limits or degrading 1-user latency by more than 20%.",
+   "changes": {
+    "gpu_memory_utilization": 0.9
+   },
+   "removed": [],
+   "raw": "{\"changes\": {\"gpu_memory_utilization\": 0.9}, \"reason\": \"Increasing gpu_memory_utilization from 0.8 to 0.9 (13.5 GB allowed vs 11.3 GB current used on 15 GB T4 GPU) provides additional KV cache capacity for the 64 concurrent requests, which can improve throughput without exceeding memory limits or degrading 1-user latency by more than 20%.\", \"already_best\": false}"
+  },
+  {
+   "type": "running",
+   "text": "running microsoft/Phi-3.5-mini-instruct (7.6 GB) with {'dtype': 'half', 'gpu_memory_utilization': 0.9, 'max_model_len': 4096} ...",
+   "time": "06:03:07"
+  },
+  {
+   "type": "measured",
+   "text": "524 tok/s · 47.9 ms/token · accuracy 4/4 · not better",
+   "time": "06:05:26",
+   "ok": false,
+   "metrics": {
+    "tokens_per_s": 524,
+    "ms_per_token": 47.9,
+    "gpu_memory_gb": 12.8,
+    "load_s": 89,
+    "accuracy": "4/4",
+    "context": 4096
+   }
+  },
+  {
+   "type": "opt_asking",
+   "text": "Asking Nemotron-3-Ultra-550b-a55b for a faster config ...",
+   "time": "06:05:26",
+   "nemotron": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "facts": "526 tok/s, 40.5 ms/token, context 4,096 tokens, KV cache 9,408 tokens, max_num_seqs 256"
+  },
+  {
+   "type": "candidate",
+   "text": "Current max_num_batched_tokens (8192) is below the ~10,240 tokens needed for 64 concurrent requests, likely limiting batch size; doubling to 16384 fits within the 1 GB memory headroom (11.3/12.3 GB used) and should increase throughput without degrading latency.",
+   "time": "06:05:33",
+   "nemotron": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "reason": "Current max_num_batched_tokens (8192) is below the ~10,240 tokens needed for 64 concurrent requests, likely limiting batch size; doubling to 16384 fits within the 1 GB memory headroom (11.3/12.3 GB used) and should increase throughput without degrading latency.",
+   "changes": {
+    "max_num_batched_tokens": 16384
+   },
+   "removed": [],
+   "raw": "{\"changes\": {\"max_num_batched_tokens\": 16384}, \"reason\": \"Current max_num_batched_tokens (8192) is below the ~10,240 tokens needed for 64 concurrent requests, likely limiting batch size; doubling to 16384 fits within the 1 GB memory headroom (11.3/12.3 GB used) and should increase throughput without degrading latency.\", \"already_best\": false}"
+  },
+  {
+   "type": "running",
+   "text": "running microsoft/Phi-3.5-mini-instruct (7.6 GB) with {'dtype': 'half', 'gpu_memory_utilization': 0.8, 'max_model_len': 4096, 'max_num_batched_tokens': 16384} ...",
+   "time": "06:05:33"
+  },
+  {
+   "type": "measured",
+   "text": "484 tok/s · 50.0 ms/token · accuracy 4/4 · not better",
+   "time": "06:08:51",
+   "ok": false,
+   "metrics": {
+    "tokens_per_s": 484,
+    "ms_per_token": 50.0,
+    "gpu_memory_gb": 10.8,
+    "load_s": 144,
+    "accuracy": "4/4",
+    "context": 4096
+   }
+  },
+  {
+   "type": "opt_none",
+   "text": "None of the tested configs was faster, so the working config stays.",
+   "time": "06:08:51"
+  }
+ ]
+}

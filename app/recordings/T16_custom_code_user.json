@@ -1,0 +1,83 @@
+{
+ "title": "T16 · Custom code enabled by you: works",
+ "model": "internlm/internlm2_5-1_8b-chat",
+ "recorded": "2026-10-10",
+ "events": [
+  {
+   "type": "gpu",
+   "text": "Detected Tesla T4 x1 (15360 MiB, compute 7.5), vLLM 0.31.0",
+   "time": "05:00:25",
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   }
+  },
+  {
+   "type": "start",
+   "text": "Mode: expert | starting settings: {'trust_remote_code': True}",
+   "time": "05:00:25",
+   "mode": "expert",
+   "start": {
+    "trust_remote_code": true
+   }
+  },
+  {
+   "type": "running",
+   "text": "running internlm/internlm2_5-1_8b-chat (3.8 GB) with {'trust_remote_code': True} ...",
+   "time": "05:00:25"
+  },
+  {
+   "type": "done",
+   "text": "WORKS on Tesla T4 (expert mode, worked first time)",
+   "time": "05:04:15",
+   "ok": true,
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   },
+   "mode": "expert",
+   "model_id": "internlm/internlm2_5-1_8b-chat",
+   "model": "internlm/internlm2_5-1_8b-chat",
+   "settings": {
+    "trust_remote_code": true
+   },
+   "start": {
+    "trust_remote_code": true
+   },
+   "metrics": {
+    "tokens_per_s": 1684,
+    "ms_per_token": 16.9,
+    "gpu_memory_gb": 13.1,
+    "load_s": 198,
+    "accuracy": "4/4",
+    "context": 65536
+   },
+   "rows": [
+    {
+     "setting": "trust_remote_code",
+     "requested": true,
+     "delivered": true,
+     "changed": false
+    }
+   ],
+   "failures": 0,
+   "lessons": 9,
+   "sources": [],
+   "engine": {
+    "kv_cache_tokens": 96912,
+    "max_num_seqs": 256,
+    "max_num_batched_tokens": 8192,
+    "gpu_memory_utilization": 0.92
+   },
+   "causes": [],
+   "inference_py": "# Tested by the agent on: Tesla T4 x1, vLLM 0.31.0\n# Use the same GPU type and vLLM version, or run the agent again on your GPU.\nfrom vllm import LLM, SamplingParams\n\nif __name__ == \"__main__\":\n    llm = LLM(model='internlm/internlm2_5-1_8b-chat', **{'trust_remote_code': True})\n    out = llm.chat([{\"role\": \"user\", \"content\": \"Hello! Who are you?\"}],\n                   SamplingParams(temperature=0.7, max_tokens=128))\n    print(out[0].outputs[0].text)\n",
+   "requirements": "vllm==0.31.0\n"
+  }
+ ]
+}

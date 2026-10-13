@@ -1,0 +1,92 @@
+{
+ "title": "T06 · dtype auto: valid, nothing changed",
+ "model": "Qwen/Qwen2.5-0.5B-Instruct",
+ "recorded": "2026-10-10",
+ "events": [
+  {
+   "type": "gpu",
+   "text": "Detected Tesla T4 x1 (15360 MiB, compute 7.5), vLLM 0.31.0",
+   "time": "04:05:22",
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   }
+  },
+  {
+   "type": "start",
+   "text": "Mode: expert | starting settings: {'dtype': 'auto', 'max_num_seqs': 128}",
+   "time": "04:05:22",
+   "mode": "expert",
+   "start": {
+    "dtype": "auto",
+    "max_num_seqs": 128
+   }
+  },
+  {
+   "type": "running",
+   "text": "running Qwen/Qwen2.5-0.5B-Instruct (1.0 GB) with {'dtype': 'auto', 'max_num_seqs': 128} ...",
+   "time": "04:05:22"
+  },
+  {
+   "type": "done",
+   "text": "WORKS on Tesla T4 (expert mode, worked first time)",
+   "time": "04:06:49",
+   "ok": true,
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   },
+   "mode": "expert",
+   "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+   "model": "Qwen/Qwen2.5-0.5B-Instruct",
+   "settings": {
+    "dtype": "auto",
+    "max_num_seqs": 128
+   },
+   "start": {
+    "dtype": "auto",
+    "max_num_seqs": 128
+   },
+   "metrics": {
+    "tokens_per_s": 5119,
+    "ms_per_token": 6.0,
+    "gpu_memory_gb": 13.3,
+    "load_s": 69,
+    "accuracy": "3/4",
+    "context": 32768
+   },
+   "rows": [
+    {
+     "setting": "dtype",
+     "requested": "auto",
+     "delivered": "auto",
+     "changed": false
+    },
+    {
+     "setting": "max_num_seqs",
+     "requested": 128,
+     "delivered": 128,
+     "changed": false
+    }
+   ],
+   "failures": 0,
+   "lessons": 3,
+   "sources": [],
+   "engine": {
+    "kv_cache_tokens": 1031296,
+    "max_num_seqs": 128,
+    "max_num_batched_tokens": 8192,
+    "gpu_memory_utilization": 0.92
+   },
+   "causes": [],
+   "inference_py": "# Tested by the agent on: Tesla T4 x1, vLLM 0.31.0\n# Use the same GPU type and vLLM version, or run the agent again on your GPU.\nfrom vllm import LLM, SamplingParams\n\nif __name__ == \"__main__\":\n    llm = LLM(model='Qwen/Qwen2.5-0.5B-Instruct', **{'dtype': 'auto', 'max_num_seqs': 128})\n    out = llm.chat([{\"role\": \"user\", \"content\": \"Hello! Who are you?\"}],\n                   SamplingParams(temperature=0.7, max_tokens=128))\n    print(out[0].outputs[0].text)\n",
+   "requirements": "vllm==0.31.0\n"
+  }
+ ]
+}

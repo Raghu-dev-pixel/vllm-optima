@@ -1,0 +1,211 @@
+{
+ "title": "T04 · FP8 KV cache on a T4: fixed, your settings kept",
+ "model": "Qwen/Qwen2.5-0.5B-Instruct",
+ "recorded": "2026-10-10",
+ "events": [
+  {
+   "type": "gpu",
+   "text": "Detected Tesla T4 x1 (15360 MiB, compute 7.5), vLLM 0.31.0",
+   "time": "03:51:45",
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   }
+  },
+  {
+   "type": "start",
+   "text": "Mode: expert | starting settings: {'kv_cache_dtype': 'fp8', 'max_num_seqs': 128}",
+   "time": "03:51:45",
+   "mode": "expert",
+   "start": {
+    "kv_cache_dtype": "fp8",
+    "max_num_seqs": 128
+   }
+  },
+  {
+   "type": "running",
+   "text": "running Qwen/Qwen2.5-0.5B-Instruct (1.0 GB) with {'kv_cache_dtype': 'fp8', 'max_num_seqs': 128} ...",
+   "time": "03:51:45"
+  },
+  {
+   "type": "failed",
+   "text": "FAILED: (EngineCore pid=5932) ERROR 10-10 03:52:13 [core.py:1433] ValueError: FP8 KV cache is not supported by the Triton attention backend on Tesla T4 (compute capability 7.5); native FP8 (fp8e4nv) requires ",
+   "time": "03:52:18",
+   "cause": "(EngineCore pid=5932) ERROR 10-10 03:52:13 [core.py:1433]   File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/attention/backends/triton_attn.py\", line 492, in __init__\n(EngineCore pid=5932) ERROR 10-10 03:52:13 [core.py:1433]     raise ValueError(\n(EngineCore pid=5932) ERROR 10-10 03:52:13 [core.py:1433] ValueError: FP8 KV cache is not supported by the Triton attention backend on Tesla T4 (compute capability 7.5); native FP8 (fp8e4nv) requires SM89+. Re-run with --kv-cache-dtype float16.\nProcess EngineCore:\nTraceback (most recent call last):\n  File \"/usr/lib/python3.12/multiprocessing/process.py\", line 314, in _bootstrap",
+   "log": "b/python3.12/site-packages/vllm/compilation/decorators.py\", line 383, in __init__\n    old_init(self, *args, **kwargs)\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/model_executor/models/qwen2.py\", line 380, in __init__\n    self.start_layer, self.end_layer, self.layers = make_layers(\n                                                    ^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/model_executor/models/utils.py\", line 890, in make_layers\n    + get_offloader().wrap_modules(\n      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/model_executor/offloader/base.py\", line 120, in wrap_modules\n    return list(modules_generator)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/model_executor/models/utils.py\", line 891, in <genexpr>\n    layer_fn(prefix=f\"{prefix}.{idx}\") for idx in range(start_layer, end_layer)\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/model_executor/models/qwen2.py\", line 382, in <lambda>\n    lambda prefix: decoder_layer_type(\n                   ^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/model_executor/models/qwen2.py\", line 265, in __init__\n    self.self_attn = Qwen2Attention(\n                     ^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/model_executor/models/qwen2.py\", line 196, in __init__\n    self.attn = attn_cls(\n                ^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/model_executor/layers/attention/attention.py\", line 420, in __init__\n    self.impl = impl_cls(  # type: ignore[assignment]  # impl_cls always returns an AttentionImpl subclass\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/attention/backends/triton_attn.py\", line 492, in __init__\n    raise ValueError(\nValueError: FP8 KV cache is not supported by the Triton attention backend on Tesla T4 (compute capability 7.5); native FP8 (fp8e4nv) requires SM89+. Re-run with --kv-cache-dtype float16.\nTraceback (most recent call last):\n  File \"/content/test_run.py\", line 13, in <module>\n    llm = LLM(model=model, **settings)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/entrypoints/llm.py\", line 344, in __init__\n    self.llm_engine = LLMEngine.from_engine_args(\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/llm_engine.py\", line 185, in from_engine_args\n    return cls(\n           ^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/llm_engine.py\", line 111, in __init__\n    self.engine_core = EngineCoreClient.make_client(\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core_client.py\", line 126, in make_client\n    return SyncMPClient(\n           ^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/tracing/otel.py\", line 175, in sync_wrapper\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core_client.py\", line 917, in __init__\n    super().__init__(\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core_client.py\", line 674, in __init__\n    with launch_core_engines(\n  File \"/usr/lib/python3.12/contextlib.py\", line 144, in __exit__\n    next(self.gen)\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/utils.py\", line 1268, in launch_core_engines\n    wait_for_engine_startup(\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/utils.py\", line 1348, in wait_for_engine_startup\n    raise RuntimeError(\nRuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}\n"
+  },
+  {
+   "type": "asking",
+   "text": "Asking Nemotron-3_5-Lightning for a fix ...",
+   "time": "03:52:18",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning"
+  },
+  {
+   "type": "fix",
+   "text": "Fix 1: FP8 KV cache is not supported on Tesla T4 (compute capability 7.5); changing kv_cache_dtype to float16 resolves the Triton backend error.",
+   "time": "03:52:28",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning",
+   "reason": "FP8 KV cache is not supported on Tesla T4 (compute capability 7.5); changing kv_cache_dtype to float16 resolves the Triton backend error.",
+   "source": "",
+   "changes": {
+    "kv_cache_dtype": "float16"
+   },
+   "removed": [],
+   "new_model": null
+  },
+  {
+   "type": "running",
+   "text": "running Qwen/Qwen2.5-0.5B-Instruct (1.0 GB) with {'kv_cache_dtype': 'float16', 'max_num_seqs': 128} ...",
+   "time": "03:52:28"
+  },
+  {
+   "type": "done",
+   "text": "WORKS on Tesla T4 (expert mode, fixed after 1 failure(s))",
+   "time": "03:54:20",
+   "ok": true,
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   },
+   "mode": "expert",
+   "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+   "model": "Qwen/Qwen2.5-0.5B-Instruct",
+   "settings": {
+    "kv_cache_dtype": "float16",
+    "max_num_seqs": 128
+   },
+   "start": {
+    "kv_cache_dtype": "fp8",
+    "max_num_seqs": 128
+   },
+   "metrics": {
+    "tokens_per_s": 5134,
+    "ms_per_token": 5.9,
+    "gpu_memory_gb": 13.3,
+    "load_s": 94,
+    "accuracy": "3/4",
+    "context": 32768
+   },
+   "rows": [
+    {
+     "setting": "kv_cache_dtype",
+     "requested": "fp8",
+     "delivered": "float16",
+     "changed": true
+    },
+    {
+     "setting": "max_num_seqs",
+     "requested": 128,
+     "delivered": 128,
+     "changed": false
+    }
+   ],
+   "failures": 1,
+   "lessons": 2,
+   "sources": [],
+   "engine": {
+    "kv_cache_tokens": 1030976,
+    "max_num_seqs": 128,
+    "max_num_batched_tokens": 8192,
+    "gpu_memory_utilization": 0.92
+   },
+   "causes": [
+    "ValueError: FP8 KV cache is not supported by the Triton attention backend on Tesla T4 (compute capability 7.5); native FP8 (fp8e4nv) requires"
+   ],
+   "inference_py": "# Tested by the agent on: Tesla T4 x1, vLLM 0.31.0\n# Use the same GPU type and vLLM version, or run the agent again on your GPU.\nfrom vllm import LLM, SamplingParams\n\nif __name__ == \"__main__\":\n    llm = LLM(model='Qwen/Qwen2.5-0.5B-Instruct', **{'kv_cache_dtype': 'float16', 'max_num_seqs': 128})\n    out = llm.chat([{\"role\": \"user\", \"content\": \"Hello! Who are you?\"}],\n                   SamplingParams(temperature=0.7, max_tokens=128))\n    print(out[0].outputs[0].text)\n",
+   "requirements": "vllm==0.31.0\n"
+  },
+  {
+   "type": "opt_start",
+   "text": "Optimizing for this GPU",
+   "time": "03:55:15"
+  },
+  {
+   "type": "opt_asking",
+   "text": "Asking Nemotron-3_5-Lightning for a faster config ...",
+   "time": "03:55:15",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning",
+   "facts": "5134 tok/s, 5.9 ms/token, context 32,768 tokens, KV cache 1,030,976 tokens, max_num_seqs 128"
+  },
+  {
+   "type": "candidate",
+   "text": "Raising max_num_seqs from 128 to 256 (vLLM default) moves toward fastest safe choice per rule; KV cache at 1030976 tokens vs only ~10240 tokens used by 64 users provides ample headroom",
+   "time": "03:57:07",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning",
+   "reason": "Raising max_num_seqs from 128 to 256 (vLLM default) moves toward fastest safe choice per rule; KV cache at 1030976 tokens vs only ~10240 tokens used by 64 users provides ample headroom",
+   "changes": {
+    "max_num_seqs": 256
+   },
+   "removed": [],
+   "raw": "{\"changes\": {\"max_num_seqs\": 256}, \"reason\": \"Raising max_num_seqs from 128 to 256 (vLLM default) moves toward fastest safe choice per rule; KV cache at 1030976 tokens vs only ~10240 tokens used by 64 users provides ample headroom\", \"already_best\": false}"
+  },
+  {
+   "type": "running",
+   "text": "running Qwen/Qwen2.5-0.5B-Instruct (1.0 GB) with {'kv_cache_dtype': 'float16', 'max_num_seqs': 256} ...",
+   "time": "03:57:08"
+  },
+  {
+   "type": "measured",
+   "text": "5,211 tok/s · 5.9 ms/token · accuracy 3/4 · not better",
+   "time": "03:59:02",
+   "ok": false,
+   "metrics": {
+    "tokens_per_s": 5211,
+    "ms_per_token": 5.9,
+    "gpu_memory_gb": 13.3,
+    "load_s": 95,
+    "accuracy": "3/4",
+    "context": 32768
+   }
+  },
+  {
+   "type": "opt_asking",
+   "text": "Asking Nemotron-3-Ultra-550b-a55b for a faster config ...",
+   "time": "03:59:02",
+   "nemotron": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "facts": "5134 tok/s, 5.9 ms/token, context 32,768 tokens, KV cache 1,030,976 tokens, max_num_seqs 128"
+  },
+  {
+   "type": "candidate",
+   "text": "Current max_num_batched_tokens (8192) < 64 requests × 160 tokens (10240), likely limiting prefill batch size; doubling to 16384 fits in KV cache headroom (1030976 tokens) and may raise throughput without hurting latency",
+   "time": "03:59:07",
+   "nemotron": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "reason": "Current max_num_batched_tokens (8192) < 64 requests × 160 tokens (10240), likely limiting prefill batch size; doubling to 16384 fits in KV cache headroom (1030976 tokens) and may raise throughput without hurting latency",
+   "changes": {
+    "max_num_batched_tokens": 16384
+   },
+   "removed": [],
+   "raw": "{\"changes\": {\"max_num_batched_tokens\": 16384}, \"reason\": \"Current max_num_batched_tokens (8192) < 64 requests × 160 tokens (10240), likely limiting prefill batch size; doubling to 16384 fits in KV cache headroom (1030976 tokens) and may raise throughput without hurting latency\", \"already_best\": false}"
+  },
+  {
+   "type": "running",
+   "text": "running Qwen/Qwen2.5-0.5B-Instruct (1.0 GB) with {'kv_cache_dtype': 'float16', 'max_num_seqs': 128, 'max_num_batched_tokens': 16384} ...",
+   "time": "03:59:07"
+  },
+  {
+   "type": "measured",
+   "text": "5,108 tok/s · 6.1 ms/token · accuracy 3/4 · not better",
+   "time": "04:00:56",
+   "ok": false,
+   "metrics": {
+    "tokens_per_s": 5108,
+    "ms_per_token": 6.1,
+    "gpu_memory_gb": 13.0,
+    "load_s": 91,
+    "accuracy": "3/4",
+    "context": 32768
+   }
+  },
+  {
+   "type": "opt_none",
+   "text": "None of the tested configs was faster, so the working config stays.",
+   "time": "04:00:56"
+  }
+ ]
+}

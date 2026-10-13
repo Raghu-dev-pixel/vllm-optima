@@ -1,0 +1,104 @@
+{
+ "title": "T15 · Custom-code model: stops safely",
+ "model": "internlm/internlm2_5-1_8b-chat",
+ "recorded": "2026-10-10",
+ "events": [
+  {
+   "type": "gpu",
+   "text": "Detected Tesla T4 x1 (15360 MiB, compute 7.5), vLLM 0.31.0",
+   "time": "04:59:13",
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   }
+  },
+  {
+   "type": "start",
+   "text": "Mode: beginner | starting settings: {'dtype': 'half'}",
+   "time": "04:59:13",
+   "mode": "beginner",
+   "start": {
+    "dtype": "half"
+   }
+  },
+  {
+   "type": "running",
+   "text": "running internlm/internlm2_5-1_8b-chat (3.8 GB) with {'dtype': 'half'} ...",
+   "time": "04:59:13"
+  },
+  {
+   "type": "failed",
+   "text": "FAILED: pydantic_core._pydantic_core.ValidationError: 1 validation error for ModelConfig Value error, The repository internlm/internlm2_5-1_8b-chat contains custom code which must be executed to correctly loa",
+   "time": "04:59:28",
+   "cause": "  File \"/content/vllm-env/lib/python3.12/site-packages/pydantic/_internal/_dataclasses.py\", line 121, in __init__\n    s.__pydantic_validator__.validate_python(ArgsKwargs(args, kwargs), self_instance=s)\npydantic_core._pydantic_core.ValidationError: 1 validation error for ModelConfig\n  Value error, The repository internlm/internlm2_5-1_8b-chat contains custom code which must be executed to correctly load the model. You can inspect the repository content at https://hf.co/internlm/internlm2_5-1_8b-chat .\n You can inspect the repository content at https://hf.co/internlm/internlm2_5-1_8b-chat.\nPlease pass the argument `trust_remote_code=True` to allow custom code to be run. [type=value_error, input_value=ArgsKwargs((), {'model': ...nderer_num_workers': 1}), input_type=ArgsKwargs]",
+   "log": "(MainProcess pid=25021) ERROR 10-10 04:59:24 [repo_utils.py:126] Error parsing config for internlm/internlm2_5-1_8b-chat: The repository internlm/internlm2_5-1_8b-chat contains custom code which must be executed to correctly load the model. You can inspect the repository content at https://hf.co/internlm/internlm2_5-1_8b-chat .\n(MainProcess pid=25021) ERROR 10-10 04:59:24 [repo_utils.py:126]  You can inspect the repository content at https://hf.co/internlm/internlm2_5-1_8b-chat.\n(MainProcess pid=25021) ERROR 10-10 04:59:24 [repo_utils.py:126] Please pass the argument `trust_remote_code=True` to allow custom code to be run., retrying 1 of 2\n(MainProcess pid=25021) ERROR 10-10 04:59:26 [repo_utils.py:124] Error parsing config for internlm/internlm2_5-1_8b-chat: The repository internlm/internlm2_5-1_8b-chat contains custom code which must be executed to correctly load the model. You can inspect the repository content at https://hf.co/internlm/internlm2_5-1_8b-chat .\n(MainProcess pid=25021) ERROR 10-10 04:59:26 [repo_utils.py:124]  You can inspect the repository content at https://hf.co/internlm/internlm2_5-1_8b-chat.\n(MainProcess pid=25021) ERROR 10-10 04:59:26 [repo_utils.py:124] Please pass the argument `trust_remote_code=True` to allow custom code to be run.\nWarning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.\nTraceback (most recent call last):\n  File \"/content/test_run.py\", line 13, in <module>\n    llm = LLM(model=model, **settings)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/entrypoints/llm.py\", line 344, in __init__\n    self.llm_engine = LLMEngine.from_engine_args(\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/llm_engine.py\", line 177, in from_engine_args\n    vllm_config = engine_args.create_engine_config(usage_context)\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/engine/arg_utils.py\", line 2183, in create_engine_config\n    model_config = self.create_model_config()\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/engine/arg_utils.py\", line 1918, in create_model_config\n    return ModelConfig(\n           ^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/pydantic/_internal/_dataclasses.py\", line 121, in __init__\n    s.__pydantic_validator__.validate_python(ArgsKwargs(args, kwargs), self_instance=s)\npydantic_core._pydantic_core.ValidationError: 1 validation error for ModelConfig\n  Value error, The repository internlm/internlm2_5-1_8b-chat contains custom code which must be executed to correctly load the model. You can inspect the repository content at https://hf.co/internlm/internlm2_5-1_8b-chat .\n You can inspect the repository content at https://hf.co/internlm/internlm2_5-1_8b-chat.\nPlease pass the argument `trust_remote_code=True` to allow custom code to be run. [type=value_error, input_value=ArgsKwargs((), {'model': ...nderer_num_workers': 1}), input_type=ArgsKwargs]\n    For further information visit https://errors.pydantic.dev/2.14/v/value_error\n"
+  },
+  {
+   "type": "asking",
+   "text": "Asking Nemotron-3_5-Lightning for a fix ...",
+   "time": "04:59:28",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning"
+  },
+  {
+   "type": "checking",
+   "text": "Nemotron wants to give up; checking the web first ...",
+   "time": "04:59:34"
+  },
+  {
+   "type": "search",
+   "text": "Searched the web (Tavily): 3 relevant result(s)",
+   "time": "04:59:37",
+   "results": [
+    {
+     "title": "[Bug]: pydantic_core._pydantic_core.ValidationError: 1 validation error for ModelConfig · Issue #26161 · vllm-project/vllm · GitHub",
+     "url": "https://github.com/vllm-project/vllm/issues/26161"
+    },
+    {
+     "title": "[Linux] Brev deploy: vLLM exits - wrong HF model id, no HF_TOKEN, missing --trust-remote-code · Issue #996 · NVIDIA/NemoClaw · GitHub",
+     "url": "https://github.com/NVIDIA/NemoClaw/issues/996"
+    },
+    {
+     "title": "[Usage]: Provide a valid Hugging Face repository ID · Issue #22043 · vllm-project/vllm · GitHub",
+     "url": "https://github.com/vllm-project/vllm/issues/22043"
+    }
+   ]
+  },
+  {
+   "type": "asking",
+   "text": "Asking Nemotron-3-Ultra-550b-a55b again, with the web results ...",
+   "time": "04:59:37",
+   "nemotron": "nvidia/Nemotron-3-Ultra-550b-a55b"
+  },
+  {
+   "type": "give_up",
+   "text": "No working configuration found -> The model requires trust_remote_code=True to load custom code, which the agent cannot set; the user must enable it themselves if they trust the repository.",
+   "time": "04:59:39",
+   "nemotron": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "source": "https://github.com/vllm-project/vllm/issues/26161"
+  },
+  {
+   "type": "cannot_run",
+   "text": "CANNOT RUN internlm/internlm2_5-1_8b-chat on Tesla T4 (15360 MiB, x1)",
+   "time": "04:59:42",
+   "ok": false,
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   },
+   "mode": "beginner",
+   "model_id": "internlm/internlm2_5-1_8b-chat",
+   "reason": "pydantic_core._pydantic_core.ValidationError: 1 validation error for ModelConfig Value error, The repository internlm/internlm2_5-1_8b-chat contains custom code which must be executed to correctly loa",
+   "advice": "The model requires trust_remote_code=True to load custom code, which the agent cannot set; the user must enable it themselves if they trust the repository.",
+   "sources": [
+    "https://github.com/vllm-project/vllm/issues/26161"
+   ],
+   "next_steps": "Add `--trust-remote-code` flag when launching vLLM (or set `trust_remote_code=True` in Python) to allow loading the model's custom code, as required by the error and explained in https://github.com/vllm-project/vllm/issues/26161  \nVerify you trust the `internlm/internlm2_5-1_8b-chat` repository before enabling this flag, since it permits execution of arbitrary code from the model repo  \nIf using vLLM's OpenAI-compatible server, pass `--trust-remote-code` on the command line; if using the Python API, add `trust_remote_code=True` to your `LLM` or `ModelConfig` initialization"
+  }
+ ]
+}

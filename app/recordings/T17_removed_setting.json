@@ -1,0 +1,114 @@
+{
+ "title": "T17 · Removed vLLM setting: fixed on first try",
+ "model": "Qwen/Qwen2.5-0.5B-Instruct",
+ "recorded": "2026-10-10",
+ "events": [
+  {
+   "type": "gpu",
+   "text": "Detected Tesla T4 x1 (15360 MiB, compute 7.5), vLLM 0.31.0",
+   "time": "05:05:07",
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   }
+  },
+  {
+   "type": "start",
+   "text": "Mode: expert | starting settings: {'max_seq_len_to_capture': 8192}",
+   "time": "05:05:07",
+   "mode": "expert",
+   "start": {
+    "max_seq_len_to_capture": 8192
+   }
+  },
+  {
+   "type": "running",
+   "text": "running Qwen/Qwen2.5-0.5B-Instruct (1.0 GB) with {'max_seq_len_to_capture': 8192} ...",
+   "time": "05:05:08"
+  },
+  {
+   "type": "failed",
+   "text": "FAILED: TypeError: EngineArgs.__init__() got an unexpected keyword argument 'max_seq_len_to_capture'",
+   "time": "05:05:20",
+   "cause": "    engine_args = EngineArgs(\n                  ^^^^^^^^^^^\nTypeError: EngineArgs.__init__() got an unexpected keyword argument 'max_seq_len_to_capture'",
+   "log": "Traceback (most recent call last):\n  File \"/content/test_run.py\", line 13, in <module>\n    llm = LLM(model=model, **settings)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/entrypoints/llm.py\", line 298, in __init__\n    engine_args = EngineArgs(\n                  ^^^^^^^^^^^\nTypeError: EngineArgs.__init__() got an unexpected keyword argument 'max_seq_len_to_capture'\n"
+  },
+  {
+   "type": "asking",
+   "text": "Asking Nemotron-3_5-Lightning for a fix ...",
+   "time": "05:05:20",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning"
+  },
+  {
+   "type": "fix",
+   "text": "Fix 1: The setting 'max_seq_len_to_capture' is not a valid EngineArgs parameter in vLLM 0.31.0; removing it resolves the TypeError.",
+   "time": "05:05:26",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning",
+   "reason": "The setting 'max_seq_len_to_capture' is not a valid EngineArgs parameter in vLLM 0.31.0; removing it resolves the TypeError.",
+   "source": "",
+   "changes": {},
+   "removed": [
+    "max_seq_len_to_capture"
+   ],
+   "new_model": null
+  },
+  {
+   "type": "running",
+   "text": "running Qwen/Qwen2.5-0.5B-Instruct (1.0 GB) with vLLM defaults ...",
+   "time": "05:05:26"
+  },
+  {
+   "type": "done",
+   "text": "WORKS on Tesla T4 (expert mode, fixed after 1 failure(s))",
+   "time": "05:06:27",
+   "ok": true,
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   },
+   "mode": "expert",
+   "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+   "model": "Qwen/Qwen2.5-0.5B-Instruct",
+   "settings": {},
+   "start": {
+    "max_seq_len_to_capture": 8192
+   },
+   "metrics": {
+    "tokens_per_s": 5402,
+    "ms_per_token": 5.7,
+    "gpu_memory_gb": 13.3,
+    "load_s": 43,
+    "accuracy": "3/4",
+    "context": 32768
+   },
+   "rows": [
+    {
+     "setting": "max_seq_len_to_capture",
+     "requested": 8192,
+     "delivered": "(default)",
+     "changed": true
+    }
+   ],
+   "failures": 1,
+   "lessons": 10,
+   "sources": [],
+   "engine": {
+    "kv_cache_tokens": 1019008,
+    "max_num_seqs": 256,
+    "max_num_batched_tokens": 8192,
+    "gpu_memory_utilization": 0.92
+   },
+   "causes": [
+    "TypeError: EngineArgs.__init__() got an unexpected keyword argument 'max_seq_len_to_capture'"
+   ],
+   "inference_py": "# Tested by the agent on: Tesla T4 x1, vLLM 0.31.0\n# Use the same GPU type and vLLM version, or run the agent again on your GPU.\nfrom vllm import LLM, SamplingParams\n\nif __name__ == \"__main__\":\n    llm = LLM(model='Qwen/Qwen2.5-0.5B-Instruct')\n    out = llm.chat([{\"role\": \"user\", \"content\": \"Hello! Who are you?\"}],\n                   SamplingParams(temperature=0.7, max_tokens=128))\n    print(out[0].outputs[0].text)\n",
+   "requirements": "vllm==0.31.0\n"
+  }
+ ]
+}

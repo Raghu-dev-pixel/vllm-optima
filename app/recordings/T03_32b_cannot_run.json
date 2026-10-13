@@ -1,0 +1,72 @@
+{
+ "title": "T03 · Qwen 32B on a 15 GB GPU: honest \"cannot run\"",
+ "model": "Qwen/Qwen2.5-32B-Instruct",
+ "recorded": "2026-10-10",
+ "events": [
+  {
+   "type": "gpu",
+   "text": "Detected Tesla T4 x1 (15360 MiB, compute 7.5), vLLM 0.31.0",
+   "time": "03:50:45",
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   }
+  },
+  {
+   "type": "start",
+   "text": "Mode: beginner | starting settings: {'dtype': 'half'}",
+   "time": "03:50:45",
+   "mode": "beginner",
+   "start": {
+    "dtype": "half"
+   }
+  },
+  {
+   "type": "size_check",
+   "text": "Qwen/Qwen2.5-32B-Instruct: weights 65.5 GB > GPU 15.0 GB -> skipped the download",
+   "time": "03:50:45"
+  },
+  {
+   "type": "failed",
+   "text": "FAILED: ModelTooLargeError: the weights of Qwen/Qwen2.5-32B-Instruct are 65.5 GB, but the GPU has 15.0 GB in total (weights must leave room for the KV cache).",
+   "time": "03:50:45",
+   "cause": "ModelTooLargeError: the weights of Qwen/Qwen2.5-32B-Instruct are 65.5 GB, but the GPU has 15.0 GB in total (weights must leave room for the KV cache).",
+   "log": ""
+  },
+  {
+   "type": "asking",
+   "text": "Asking Nemotron-3_5-Lightning for a fix ...",
+   "time": "03:50:45",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning"
+  },
+  {
+   "type": "give_up",
+   "text": "No working configuration found -> The 65.5 GB FP16 model exceeds the 15 GB T4 GPU memory even when quantized to 4-bit (~16.4 GB), leaving no room for KV cache; a GPU with ~18+ GB (e.g., A100 40 GB) is required.",
+   "time": "03:50:58",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning",
+   "source": ""
+  },
+  {
+   "type": "cannot_run",
+   "text": "CANNOT RUN Qwen/Qwen2.5-32B-Instruct on Tesla T4 (15360 MiB, x1)",
+   "time": "03:51:06",
+   "ok": false,
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   },
+   "mode": "beginner",
+   "model_id": "Qwen/Qwen2.5-32B-Instruct",
+   "reason": "ModelTooLargeError: the weights of Qwen/Qwen2.5-32B-Instruct are 65.5 GB, but the GPU has 15.0 GB in total (weights must leave room for the KV cache).",
+   "advice": "The 65.5 GB FP16 model exceeds the 15 GB T4 GPU memory even when quantized to 4-bit (~16.4 GB), leaving no room for KV cache; a GPU with ~18+ GB (e.g., A100 40 GB) is required.",
+   "sources": [],
+   "next_steps": "Switch to a smaller model (e.g., Qwen2.5-7B-Instruct) that fits within the 15 GB T4 GPU memory.  \nUse a GPU with at least 18 GB VRAM (e.g., NVIDIA A100 40 GB) because even 4‑bit quantization of the 65.5 GB model exceeds 15 GB.  \nIf multiple T4 GPUs are available, enable tensor parallelism in vLLM (expert setting: `--tensor-parallel-size 2`) to split the model across GPUs."
+  }
+ ]
+}

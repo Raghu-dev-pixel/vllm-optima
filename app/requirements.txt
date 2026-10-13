@@ -1,0 +1,4 @@
+gradio>=4.40
+openai
+huggingface_hub
+tavily-python

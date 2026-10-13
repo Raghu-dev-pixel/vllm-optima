@@ -1,0 +1,83 @@
+{
+ "title": "T01 · Qwen 0.5B: works first time",
+ "model": "Qwen/Qwen2.5-0.5B-Instruct",
+ "recorded": "2026-10-10",
+ "events": [
+  {
+   "type": "gpu",
+   "text": "Detected Tesla T4 x1 (15360 MiB, compute 7.5), vLLM 0.31.0",
+   "time": "03:38:54",
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   }
+  },
+  {
+   "type": "start",
+   "text": "Mode: beginner | starting settings: {'dtype': 'half'}",
+   "time": "03:38:54",
+   "mode": "beginner",
+   "start": {
+    "dtype": "half"
+   }
+  },
+  {
+   "type": "running",
+   "text": "running Qwen/Qwen2.5-0.5B-Instruct (1.0 GB) with {'dtype': 'half'} ...",
+   "time": "03:38:54"
+  },
+  {
+   "type": "done",
+   "text": "WORKS on Tesla T4 (beginner mode, worked first time)",
+   "time": "03:41:46",
+   "ok": true,
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   },
+   "mode": "beginner",
+   "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+   "model": "Qwen/Qwen2.5-0.5B-Instruct",
+   "settings": {
+    "dtype": "half"
+   },
+   "start": {
+    "dtype": "half"
+   },
+   "metrics": {
+    "tokens_per_s": 5349,
+    "ms_per_token": 5.8,
+    "gpu_memory_gb": 13.3,
+    "load_s": 142,
+    "accuracy": "3/4",
+    "context": 32768
+   },
+   "rows": [
+    {
+     "setting": "dtype",
+     "requested": "half",
+     "delivered": "half",
+     "changed": false
+    }
+   ],
+   "failures": 0,
+   "lessons": 0,
+   "sources": [],
+   "engine": {
+    "kv_cache_tokens": 1018176,
+    "max_num_seqs": 256,
+    "max_num_batched_tokens": 8192,
+    "gpu_memory_utilization": 0.92
+   },
+   "causes": [],
+   "inference_py": "# Tested by the agent on: Tesla T4 x1, vLLM 0.31.0\n# Use the same GPU type and vLLM version, or run the agent again on your GPU.\nfrom vllm import LLM, SamplingParams\n\nif __name__ == \"__main__\":\n    llm = LLM(model='Qwen/Qwen2.5-0.5B-Instruct', **{'dtype': 'half'})\n    out = llm.chat([{\"role\": \"user\", \"content\": \"Hello! Who are you?\"}],\n                   SamplingParams(temperature=0.7, max_tokens=128))\n    print(out[0].outputs[0].text)\n",
+   "requirements": "vllm==0.31.0\n"
+  }
+ ]
+}

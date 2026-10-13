@@ -1,0 +1,125 @@
+{
+ "title": "T10 · Phi-3.5 asks for 32k: context reduced to fit",
+ "model": "microsoft/Phi-3.5-mini-instruct",
+ "recorded": "2026-10-10",
+ "events": [
+  {
+   "type": "gpu",
+   "text": "Detected Tesla T4 x1 (15360 MiB, compute 7.5), vLLM 0.31.0",
+   "time": "04:30:00",
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   }
+  },
+  {
+   "type": "start",
+   "text": "Mode: beginner | starting settings: {'dtype': 'half', 'max_model_len': 32768}",
+   "time": "04:30:00",
+   "mode": "beginner",
+   "start": {
+    "dtype": "half",
+    "max_model_len": 32768
+   }
+  },
+  {
+   "type": "running",
+   "text": "running microsoft/Phi-3.5-mini-instruct (7.6 GB) with {'dtype': 'half', 'max_model_len': 32768} ...",
+   "time": "04:30:01"
+  },
+  {
+   "type": "failed",
+   "text": "FAILED: (EngineCore pid=16958) ERROR 10-10 04:31:44 [core.py:1433] ValueError: To serve at least one request with the model's max seq len (32768), (12.01 GiB KV cache is needed, which is larger than the avail",
+   "time": "04:31:46",
+   "cause": "(EngineCore pid=16958) ERROR 10-10 04:31:44 [core.py:1433]   File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/core/kv_cache_utils.py\", line 925, in _check_enough_kv_cache_memory\n(EngineCore pid=16958) ERROR 10-10 04:31:44 [core.py:1433]     raise ValueError(\n(EngineCore pid=16958) ERROR 10-10 04:31:44 [core.py:1433] ValueError: To serve at least one request with the model's max seq len (32768), (12.01 GiB KV cache is needed, which is larger than the available KV cache memory (5.19 GiB). Based on the available memory, the estimated maximum model length is 14160. Try increasing `gpu_memory_utilization` (which also controls CPU memory on the CPU backend) or decreasing `max_model_len` when initializing the engine. See https://docs.vllm.ai/en/latest/configuration/conserving_memory/ for more details.\n[transformers] This model config has set a `rope_parameters['original_max_position_embeddings']` field, to be used together with `max_position_embeddings` to determine a scaling factor. Please set the `factor` field of `rope_parameters`with this ratio instead -- we recommend the use of this field over `original_max_position_embeddings`, as it is compatible with most model architectures.\n\nLoading safetensors checkpoint shards:   0% Completed | 0/2 [00:00<?, ?it/s]",
+   "log": "elf.run()\n  File \"/usr/lib/python3.12/multiprocessing/process.py\", line 108, in run\n    self._target(*self._args, **self._kwargs)\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core.py\", line 1437, in run_engine_core\n    raise e\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core.py\", line 1395, in run_engine_core\n    engine_core = EngineCoreProc(*args, engine_index=dp_rank, **kwargs)\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/tracing/otel.py\", line 175, in sync_wrapper\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core.py\", line 1151, in __init__\n    super().__init__(\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core.py\", line 151, in __init__\n    kv_cache_config = self._initialize_kv_caches(vllm_config)\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/tracing/otel.py\", line 175, in sync_wrapper\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core.py\", line 320, in _initialize_kv_caches\n    kv_cache_configs = get_kv_cache_configs(\n                       ^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/core/kv_cache_utils.py\", line 2795, in get_kv_cache_configs\n    _check_enough_kv_cache_memory(\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/core/kv_cache_utils.py\", line 925, in _check_enough_kv_cache_memory\n    raise ValueError(\nValueError: To serve at least one request with the model's max seq len (32768), (12.01 GiB KV cache is needed, which is larger than the available KV cache memory (5.19 GiB). Based on the available memory, the estimated maximum model length is 14160. Try increasing `gpu_memory_utilization` (which also controls CPU memory on the CPU backend) or decreasing `max_model_len` when initializing the engine. See https://docs.vllm.ai/en/latest/configuration/conserving_memory/ for more details.\nTraceback (most recent call last):\n  File \"/content/test_run.py\", line 13, in <module>\n    llm = LLM(model=model, **settings)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/entrypoints/llm.py\", line 344, in __init__\n    self.llm_engine = LLMEngine.from_engine_args(\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/llm_engine.py\", line 185, in from_engine_args\n    return cls(\n           ^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/llm_engine.py\", line 111, in __init__\n    self.engine_core = EngineCoreClient.make_client(\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core_client.py\", line 126, in make_client\n    return SyncMPClient(\n           ^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/tracing/otel.py\", line 175, in sync_wrapper\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core_client.py\", line 917, in __init__\n    super().__init__(\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core_client.py\", line 674, in __init__\n    with launch_core_engines(\n  File \"/usr/lib/python3.12/contextlib.py\", line 144, in __exit__\n    next(self.gen)\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/utils.py\", line 1268, in launch_core_engines\n    wait_for_engine_startup(\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/utils.py\", line 1348, in wait_for_engine_startup\n    raise RuntimeError(\nRuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}\n"
+  },
+  {
+   "type": "asking",
+   "text": "Asking Nemotron-3_5-Lightning for a fix ...",
+   "time": "04:31:46",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning"
+  },
+  {
+   "type": "fix",
+   "text": "Fix 1: The original max_model_len=32768 required 12.01 GiB KV cache, exceeding the T4's available 5.19 GiB; reducing to 8192 fits the GPU memory budget.",
+   "time": "04:31:59",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning",
+   "reason": "The original max_model_len=32768 required 12.01 GiB KV cache, exceeding the T4's available 5.19 GiB; reducing to 8192 fits the GPU memory budget.",
+   "source": "",
+   "changes": {
+    "max_model_len": 8192
+   },
+   "removed": [],
+   "new_model": null
+  },
+  {
+   "type": "running",
+   "text": "running microsoft/Phi-3.5-mini-instruct (7.6 GB) with {'dtype': 'half', 'max_model_len': 8192} ...",
+   "time": "04:31:59"
+  },
+  {
+   "type": "done",
+   "text": "WORKS on Tesla T4 (beginner mode, fixed after 1 failure(s))",
+   "time": "04:35:18",
+   "ok": true,
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   },
+   "mode": "beginner",
+   "model_id": "microsoft/Phi-3.5-mini-instruct",
+   "model": "microsoft/Phi-3.5-mini-instruct",
+   "settings": {
+    "dtype": "half",
+    "max_model_len": 8192
+   },
+   "start": {
+    "dtype": "half",
+    "max_model_len": 32768
+   },
+   "metrics": {
+    "tokens_per_s": 526,
+    "ms_per_token": 59.2,
+    "gpu_memory_gb": 13.1,
+    "load_s": 140,
+    "accuracy": "4/4",
+    "context": 8192
+   },
+   "rows": [
+    {
+     "setting": "dtype",
+     "requested": "half",
+     "delivered": "half",
+     "changed": false
+    },
+    {
+     "setting": "max_model_len",
+     "requested": 32768,
+     "delivered": 8192,
+     "changed": true
+    }
+   ],
+   "failures": 1,
+   "lessons": 7,
+   "sources": [],
+   "engine": {
+    "kv_cache_tokens": 14176,
+    "max_num_seqs": 256,
+    "max_num_batched_tokens": 8192,
+    "gpu_memory_utilization": 0.92
+   },
+   "causes": [
+    "ValueError: To serve at least one request with the model's max seq len (32768), (12.01 GiB KV cache is needed, which is larger than the avail"
+   ],
+   "inference_py": "# Tested by the agent on: Tesla T4 x1, vLLM 0.31.0\n# Use the same GPU type and vLLM version, or run the agent again on your GPU.\nfrom vllm import LLM, SamplingParams\n\nif __name__ == \"__main__\":\n    llm = LLM(model='microsoft/Phi-3.5-mini-instruct', **{'dtype': 'half', 'max_model_len': 8192})\n    out = llm.chat([{\"role\": \"user\", \"content\": \"Hello! Who are you?\"}],\n                   SamplingParams(temperature=0.7, max_tokens=128))\n    print(out[0].outputs[0].text)\n",
+   "requirements": "vllm==0.31.0\n"
+  }
+ ]
+}

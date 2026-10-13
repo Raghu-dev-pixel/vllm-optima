@@ -1,0 +1,114 @@
+{
+ "title": "T02 · Qwen 7B too big for a T4: switched to 4-bit AWQ",
+ "model": "Qwen/Qwen2.5-7B-Instruct",
+ "recorded": "2026-10-10",
+ "events": [
+  {
+   "type": "gpu",
+   "text": "Detected Tesla T4 x1 (15360 MiB, compute 7.5), vLLM 0.31.0",
+   "time": "03:43:00",
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   }
+  },
+  {
+   "type": "start",
+   "text": "Mode: beginner | starting settings: {'dtype': 'half'}",
+   "time": "03:43:00",
+   "mode": "beginner",
+   "start": {
+    "dtype": "half"
+   }
+  },
+  {
+   "type": "size_check",
+   "text": "Qwen/Qwen2.5-7B-Instruct: weights 15.2 GB > GPU 15.0 GB -> skipped the download",
+   "time": "03:43:01"
+  },
+  {
+   "type": "failed",
+   "text": "FAILED: ModelTooLargeError: the weights of Qwen/Qwen2.5-7B-Instruct are 15.2 GB, but the GPU has 15.0 GB in total (weights must leave room for the KV cache).",
+   "time": "03:43:01",
+   "cause": "ModelTooLargeError: the weights of Qwen/Qwen2.5-7B-Instruct are 15.2 GB, but the GPU has 15.0 GB in total (weights must leave room for the KV cache).",
+   "log": ""
+  },
+  {
+   "type": "asking",
+   "text": "Asking Nemotron-3_5-Lightning for a fix ...",
+   "time": "03:43:01",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning"
+  },
+  {
+   "type": "fix",
+   "text": "Fix 1: Switched to 4-bit AWQ quantized variant (~5 GB) that fits within 15 GB GPU memory.",
+   "time": "03:43:10",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning",
+   "reason": "Switched to 4-bit AWQ quantized variant (~5 GB) that fits within 15 GB GPU memory.",
+   "source": "",
+   "changes": {},
+   "removed": [],
+   "new_model": "Qwen/Qwen2.5-7B-Instruct-AWQ"
+  },
+  {
+   "type": "running",
+   "text": "running Qwen/Qwen2.5-7B-Instruct-AWQ (5.6 GB) with {'dtype': 'half'} ...",
+   "time": "03:43:11"
+  },
+  {
+   "type": "done",
+   "text": "WORKS on Tesla T4 (beginner mode, fixed after 1 failure(s))",
+   "time": "03:49:32",
+   "ok": true,
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   },
+   "mode": "beginner",
+   "model_id": "Qwen/Qwen2.5-7B-Instruct",
+   "model": "Qwen/Qwen2.5-7B-Instruct-AWQ",
+   "settings": {
+    "dtype": "half"
+   },
+   "start": {
+    "dtype": "half"
+   },
+   "metrics": {
+    "tokens_per_s": 883,
+    "ms_per_token": 26.2,
+    "gpu_memory_gb": 12.5,
+    "load_s": 346,
+    "accuracy": "4/4",
+    "context": 32768
+   },
+   "rows": [
+    {
+     "setting": "dtype",
+     "requested": "half",
+     "delivered": "half",
+     "changed": false
+    }
+   ],
+   "failures": 1,
+   "lessons": 1,
+   "sources": [],
+   "engine": {
+    "kv_cache_tokens": 117568,
+    "max_num_seqs": 256,
+    "max_num_batched_tokens": 8192,
+    "gpu_memory_utilization": 0.92
+   },
+   "causes": [
+    "ModelTooLargeError: the weights of Qwen/Qwen2.5-7B-Instruct are 15.2 GB, but the GPU has 15.0 GB in total (weights must leave room for the KV cache)."
+   ],
+   "inference_py": "# Tested by the agent on: Tesla T4 x1, vLLM 0.31.0\n# Use the same GPU type and vLLM version, or run the agent again on your GPU.\nfrom vllm import LLM, SamplingParams\n\nif __name__ == \"__main__\":\n    llm = LLM(model='Qwen/Qwen2.5-7B-Instruct-AWQ', **{'dtype': 'half'})\n    out = llm.chat([{\"role\": \"user\", \"content\": \"Hello! Who are you?\"}],\n                   SamplingParams(temperature=0.7, max_tokens=128))\n    print(out[0].outputs[0].text)\n",
+   "requirements": "vllm==0.31.0\n"
+  }
+ ]
+}

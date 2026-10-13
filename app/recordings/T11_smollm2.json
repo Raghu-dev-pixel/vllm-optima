@@ -1,0 +1,83 @@
+{
+ "title": "T11 · SmolLM2: works first time",
+ "model": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
+ "recorded": "2026-10-10",
+ "events": [
+  {
+   "type": "gpu",
+   "text": "Detected Tesla T4 x1 (15360 MiB, compute 7.5), vLLM 0.31.0",
+   "time": "04:37:19",
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   }
+  },
+  {
+   "type": "start",
+   "text": "Mode: beginner | starting settings: {'dtype': 'half'}",
+   "time": "04:37:19",
+   "mode": "beginner",
+   "start": {
+    "dtype": "half"
+   }
+  },
+  {
+   "type": "running",
+   "text": "running HuggingFaceTB/SmolLM2-1.7B-Instruct (3.4 GB) with {'dtype': 'half'} ...",
+   "time": "04:37:19"
+  },
+  {
+   "type": "done",
+   "text": "WORKS on Tesla T4 (beginner mode, worked first time)",
+   "time": "04:40:32",
+   "ok": true,
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   },
+   "mode": "beginner",
+   "model_id": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
+   "model": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
+   "settings": {
+    "dtype": "half"
+   },
+   "start": {
+    "dtype": "half"
+   },
+   "metrics": {
+    "tokens_per_s": 1038,
+    "ms_per_token": 21.2,
+    "gpu_memory_gb": 13.0,
+    "load_s": 159,
+    "accuracy": "3/4",
+    "context": 8192
+   },
+   "rows": [
+    {
+     "setting": "dtype",
+     "requested": "half",
+     "delivered": "half",
+     "changed": false
+    }
+   ],
+   "failures": 0,
+   "lessons": 7,
+   "sources": [],
+   "engine": {
+    "kv_cache_tokens": 50496,
+    "max_num_seqs": 256,
+    "max_num_batched_tokens": 8192,
+    "gpu_memory_utilization": 0.92
+   },
+   "causes": [],
+   "inference_py": "# Tested by the agent on: Tesla T4 x1, vLLM 0.31.0\n# Use the same GPU type and vLLM version, or run the agent again on your GPU.\nfrom vllm import LLM, SamplingParams\n\nif __name__ == \"__main__\":\n    llm = LLM(model='HuggingFaceTB/SmolLM2-1.7B-Instruct', **{'dtype': 'half'})\n    out = llm.chat([{\"role\": \"user\", \"content\": \"Hello! Who are you?\"}],\n                   SamplingParams(temperature=0.7, max_tokens=128))\n    print(out[0].outputs[0].text)\n",
+   "requirements": "vllm==0.31.0\n"
+  }
+ ]
+}

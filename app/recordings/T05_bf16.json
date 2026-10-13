@@ -1,0 +1,125 @@
+{
+ "title": "T05 · bfloat16 on a T4: fixed to half, your settings kept",
+ "model": "Qwen/Qwen2.5-0.5B-Instruct",
+ "recorded": "2026-10-10",
+ "events": [
+  {
+   "type": "gpu",
+   "text": "Detected Tesla T4 x1 (15360 MiB, compute 7.5), vLLM 0.31.0",
+   "time": "04:01:47",
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   }
+  },
+  {
+   "type": "start",
+   "text": "Mode: expert | starting settings: {'dtype': 'bfloat16', 'max_num_seqs': 128}",
+   "time": "04:01:47",
+   "mode": "expert",
+   "start": {
+    "dtype": "bfloat16",
+    "max_num_seqs": 128
+   }
+  },
+  {
+   "type": "running",
+   "text": "running Qwen/Qwen2.5-0.5B-Instruct (1.0 GB) with {'dtype': 'bfloat16', 'max_num_seqs': 128} ...",
+   "time": "04:01:47"
+  },
+  {
+   "type": "failed",
+   "text": "FAILED: (EngineCore pid=8929) ERROR 10-10 04:02:07 [core.py:1433] ValueError: Bfloat16 is only supported on GPUs with compute capability of at least 8.0. Your Tesla T4 GPU has compute capability 7.5. You can ",
+   "time": "04:02:11",
+   "cause": "(EngineCore pid=8929) ERROR 10-10 04:02:07 [core.py:1433]   File \"/content/vllm-env/lib/python3.12/site-packages/vllm/platforms/cuda.py\", line 668, in check_if_supports_dtype\n(EngineCore pid=8929) ERROR 10-10 04:02:07 [core.py:1433]     raise ValueError(\n(EngineCore pid=8929) ERROR 10-10 04:02:07 [core.py:1433] ValueError: Bfloat16 is only supported on GPUs with compute capability of at least 8.0. Your Tesla T4 GPU has compute capability 7.5. You can use float16 instead by explicitly setting the `dtype` flag in CLI, for example: --dtype=half.\nProcess EngineCore:\nTraceback (most recent call last):\n  File \"/usr/lib/python3.12/multiprocessing/process.py\", line 314, in _bootstrap",
+   "log": "llm/v1/engine/core.py\", line 1437, in run_engine_core\n    raise e\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core.py\", line 1395, in run_engine_core\n    engine_core = EngineCoreProc(*args, engine_index=dp_rank, **kwargs)\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/tracing/otel.py\", line 175, in sync_wrapper\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core.py\", line 1151, in __init__\n    super().__init__(\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core.py\", line 140, in __init__\n    self.model_executor = executor_class(vllm_config)\n                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/tracing/otel.py\", line 175, in sync_wrapper\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/executor/abstract.py\", line 113, in __init__\n    self._init_executor()\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/executor/uniproc_executor.py\", line 69, in _init_executor\n    self.driver_worker.init_device()\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/worker/worker_base.py\", line 343, in init_device\n    self.worker.init_device()  # type: ignore\n    ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/tracing/otel.py\", line 175, in sync_wrapper\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/worker/gpu_worker.py\", line 464, in init_device\n    current_platform.check_if_supports_dtype(self.model_config.dtype)\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/platforms/cuda.py\", line 668, in check_if_supports_dtype\n    raise ValueError(\nValueError: Bfloat16 is only supported on GPUs with compute capability of at least 8.0. Your Tesla T4 GPU has compute capability 7.5. You can use float16 instead by explicitly setting the `dtype` flag in CLI, for example: --dtype=half.\nTraceback (most recent call last):\n  File \"/content/test_run.py\", line 13, in <module>\n    llm = LLM(model=model, **settings)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/entrypoints/llm.py\", line 344, in __init__\n    self.llm_engine = LLMEngine.from_engine_args(\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/llm_engine.py\", line 185, in from_engine_args\n    return cls(\n           ^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/llm_engine.py\", line 111, in __init__\n    self.engine_core = EngineCoreClient.make_client(\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core_client.py\", line 126, in make_client\n    return SyncMPClient(\n           ^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/tracing/otel.py\", line 175, in sync_wrapper\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core_client.py\", line 917, in __init__\n    super().__init__(\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core_client.py\", line 674, in __init__\n    with launch_core_engines(\n  File \"/usr/lib/python3.12/contextlib.py\", line 144, in __exit__\n    next(self.gen)\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/utils.py\", line 1268, in launch_core_engines\n    wait_for_engine_startup(\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/utils.py\", line 1348, in wait_for_engine_startup\n    raise RuntimeError(\nRuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}\n"
+  },
+  {
+   "type": "asking",
+   "text": "Asking Nemotron-3_5-Lightning for a fix ...",
+   "time": "04:02:11",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning"
+  },
+  {
+   "type": "fix",
+   "text": "Fix 1: Tesla T4 (compute capability 7.5) does not support bfloat16; changing dtype to half (float16) resolves the error.",
+   "time": "04:02:19",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning",
+   "reason": "Tesla T4 (compute capability 7.5) does not support bfloat16; changing dtype to half (float16) resolves the error.",
+   "source": "",
+   "changes": {
+    "dtype": "half"
+   },
+   "removed": [],
+   "new_model": null
+  },
+  {
+   "type": "running",
+   "text": "running Qwen/Qwen2.5-0.5B-Instruct (1.0 GB) with {'dtype': 'half', 'max_num_seqs': 128} ...",
+   "time": "04:02:19"
+  },
+  {
+   "type": "done",
+   "text": "WORKS on Tesla T4 (expert mode, fixed after 1 failure(s))",
+   "time": "04:04:08",
+   "ok": true,
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   },
+   "mode": "expert",
+   "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+   "model": "Qwen/Qwen2.5-0.5B-Instruct",
+   "settings": {
+    "dtype": "half",
+    "max_num_seqs": 128
+   },
+   "start": {
+    "dtype": "bfloat16",
+    "max_num_seqs": 128
+   },
+   "metrics": {
+    "tokens_per_s": 5109,
+    "ms_per_token": 6.0,
+    "gpu_memory_gb": 13.3,
+    "load_s": 90,
+    "accuracy": "3/4",
+    "context": 32768
+   },
+   "rows": [
+    {
+     "setting": "dtype",
+     "requested": "bfloat16",
+     "delivered": "half",
+     "changed": true
+    },
+    {
+     "setting": "max_num_seqs",
+     "requested": 128,
+     "delivered": 128,
+     "changed": false
+    }
+   ],
+   "failures": 1,
+   "lessons": 3,
+   "sources": [],
+   "engine": {
+    "kv_cache_tokens": 1030976,
+    "max_num_seqs": 128,
+    "max_num_batched_tokens": 8192,
+    "gpu_memory_utilization": 0.92
+   },
+   "causes": [
+    "ValueError: Bfloat16 is only supported on GPUs with compute capability of at least 8.0. Your Tesla T4 GPU has compute capability 7.5. You can"
+   ],
+   "inference_py": "# Tested by the agent on: Tesla T4 x1, vLLM 0.31.0\n# Use the same GPU type and vLLM version, or run the agent again on your GPU.\nfrom vllm import LLM, SamplingParams\n\nif __name__ == \"__main__\":\n    llm = LLM(model='Qwen/Qwen2.5-0.5B-Instruct', **{'dtype': 'half', 'max_num_seqs': 128})\n    out = llm.chat([{\"role\": \"user\", \"content\": \"Hello! Who are you?\"}],\n                   SamplingParams(temperature=0.7, max_tokens=128))\n    print(out[0].outputs[0].text)\n",
+   "requirements": "vllm==0.31.0\n"
+  }
+ ]
+}

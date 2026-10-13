@@ -1,0 +1,229 @@
+{
+ "title": "T21 · Optimize the OOM fix: already fast, kept",
+ "model": "Qwen/Qwen2.5-0.5B-Instruct",
+ "recorded": "2026-10-10",
+ "events": [
+  {
+   "type": "gpu",
+   "text": "Detected Tesla T4 x1 (15360 MiB, compute 7.5), vLLM 0.31.0",
+   "time": "05:16:18",
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   }
+  },
+  {
+   "type": "start",
+   "text": "Mode: expert | starting settings: {'gpu_memory_utilization': 0.98, 'max_num_seqs': 1024}",
+   "time": "05:16:18",
+   "mode": "expert",
+   "start": {
+    "gpu_memory_utilization": 0.98,
+    "max_num_seqs": 1024
+   }
+  },
+  {
+   "type": "running",
+   "text": "running Qwen/Qwen2.5-0.5B-Instruct (1.0 GB) with {'gpu_memory_utilization': 0.98, 'max_num_seqs': 1024} ...",
+   "time": "05:16:18"
+  },
+  {
+   "type": "failed",
+   "text": "FAILED: (EngineCore pid=30005) ERROR 10-10 05:16:59 [core.py:1433] torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 594.00 MiB. GPU 0 has a total capacity of 14.56 GiB of which 447.81 MiB is free",
+   "time": "05:17:02",
+   "cause": "(EngineCore pid=30005) ERROR 10-10 05:16:59 [core.py:1433]     logits = torch.empty_like(logits, dtype=torch.float32).copy_(logits)\n(EngineCore pid=30005) ERROR 10-10 05:16:59 [core.py:1433]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n(EngineCore pid=30005) ERROR 10-10 05:16:59 [core.py:1433] torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 594.00 MiB. GPU 0 has a total capacity of 14.56 GiB of which 447.81 MiB is free. Including non-PyTorch memory, this process has 14.12 GiB memory in use. Of the allocated memory 13.85 GiB is allocated by PyTorch, and 85.79 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)\n\nLoading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]\n",
+   "log": "ns(grammar_output)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/torch/utils/_contextlib.py\", line 124, in decorate_context\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/worker/gpu/eplb_utils.py\", line 27, in wrapper\n    result = fn(self, *args, **kwargs)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/worker/gpu/model_runner.py\", line 2096, in sample_tokens\n    sampler_output, num_sampled, num_rejected = self.sample(\n                                                ^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/worker/gpu/model_runner.py\", line 1600, in sample\n    sampler_output = self.sampler(logits, input_batch)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/worker/gpu/sample/sampler.py\", line 154, in __call__\n    sampled, processed_logits = self.sample(\n                                ^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/worker/gpu/sample/sampler.py\", line 287, in sample\n    processed_logits = self.apply_sampling_params(\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/worker/gpu/sample/sampler.py\", line 239, in apply_sampling_params\n    logits = torch.empty_like(logits, dtype=torch.float32).copy_(logits)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntorch.OutOfMemoryError: CUDA out of memory. Tried to allocate 594.00 MiB. GPU 0 has a total capacity of 14.56 GiB of which 447.81 MiB is free. Including non-PyTorch memory, this process has 14.12 GiB memory in use. Of the allocated memory 13.85 GiB is allocated by PyTorch, and 85.79 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)\nTraceback (most recent call last):\n  File \"/content/test_run.py\", line 13, in <module>\n    llm = LLM(model=model, **settings)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/entrypoints/llm.py\", line 344, in __init__\n    self.llm_engine = LLMEngine.from_engine_args(\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/llm_engine.py\", line 185, in from_engine_args\n    return cls(\n           ^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/llm_engine.py\", line 111, in __init__\n    self.engine_core = EngineCoreClient.make_client(\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core_client.py\", line 126, in make_client\n    return SyncMPClient(\n           ^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/tracing/otel.py\", line 175, in sync_wrapper\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core_client.py\", line 917, in __init__\n    super().__init__(\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core_client.py\", line 674, in __init__\n    with launch_core_engines(\n  File \"/usr/lib/python3.12/contextlib.py\", line 144, in __exit__\n    next(self.gen)\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/utils.py\", line 1268, in launch_core_engines\n    wait_for_engine_startup(\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/utils.py\", line 1348, in wait_for_engine_startup\n    raise RuntimeError(\nRuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}\n"
+  },
+  {
+   "type": "asking",
+   "text": "Asking Nemotron-3_5-Lightning for a fix ...",
+   "time": "05:17:02",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning"
+  },
+  {
+   "type": "fix",
+   "text": "Fix 1: Reducing dtype to half (fp16) and lowering gpu_memory_utilization and max_num_seqs fits the 15 GB T4 memory, avoiding OOM.",
+   "time": "05:17:06",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning",
+   "reason": "Reducing dtype to half (fp16) and lowering gpu_memory_utilization and max_num_seqs fits the 15 GB T4 memory, avoiding OOM.",
+   "source": "",
+   "changes": {
+    "dtype": "half",
+    "gpu_memory_utilization": 0.8,
+    "max_num_seqs": 128,
+    "max_model_len": 4096
+   },
+   "removed": [],
+   "new_model": null
+  },
+  {
+   "type": "running",
+   "text": "running Qwen/Qwen2.5-0.5B-Instruct (1.0 GB) with {'dtype': 'half', 'gpu_memory_utilization': 0.8, 'max_num_seqs': 128, 'max_model_len': 4096} ...",
+   "time": "05:17:06"
+  },
+  {
+   "type": "done",
+   "text": "WORKS on Tesla T4 (expert mode, fixed after 1 failure(s))",
+   "time": "05:18:56",
+   "ok": true,
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   },
+   "mode": "expert",
+   "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+   "model": "Qwen/Qwen2.5-0.5B-Instruct",
+   "settings": {
+    "dtype": "half",
+    "gpu_memory_utilization": 0.8,
+    "max_num_seqs": 128,
+    "max_model_len": 4096
+   },
+   "start": {
+    "gpu_memory_utilization": 0.98,
+    "max_num_seqs": 1024
+   },
+   "metrics": {
+    "tokens_per_s": 5431,
+    "ms_per_token": 5.7,
+    "gpu_memory_gb": 11.5,
+    "load_s": 91,
+    "accuracy": "3/4",
+    "context": 4096
+   },
+   "rows": [
+    {
+     "setting": "dtype",
+     "requested": "(default)",
+     "delivered": "half",
+     "changed": true
+    },
+    {
+     "setting": "gpu_memory_utilization",
+     "requested": 0.98,
+     "delivered": 0.8,
+     "changed": true
+    },
+    {
+     "setting": "max_model_len",
+     "requested": "(default)",
+     "delivered": 4096,
+     "changed": true
+    },
+    {
+     "setting": "max_num_seqs",
+     "requested": 1024,
+     "delivered": 128,
+     "changed": true
+    }
+   ],
+   "failures": 1,
+   "lessons": 12,
+   "sources": [],
+   "engine": {
+    "kv_cache_tokens": 878256,
+    "max_num_seqs": 128,
+    "max_num_batched_tokens": 8192,
+    "gpu_memory_utilization": 0.8
+   },
+   "causes": [
+    "torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 594.00 MiB. GPU 0 has a total capacity of 14.56 GiB of which 447.81 MiB is free"
+   ],
+   "inference_py": "# Tested by the agent on: Tesla T4 x1, vLLM 0.31.0\n# Use the same GPU type and vLLM version, or run the agent again on your GPU.\nfrom vllm import LLM, SamplingParams\n\nif __name__ == \"__main__\":\n    llm = LLM(model='Qwen/Qwen2.5-0.5B-Instruct', **{'dtype': 'half', 'gpu_memory_utilization': 0.8, 'max_num_seqs': 128, 'max_model_len': 4096})\n    out = llm.chat([{\"role\": \"user\", \"content\": \"Hello! Who are you?\"}],\n                   SamplingParams(temperature=0.7, max_tokens=128))\n    print(out[0].outputs[0].text)\n",
+   "requirements": "vllm==0.31.0\n"
+  },
+  {
+   "type": "opt_start",
+   "text": "Optimizing for this GPU",
+   "time": "05:19:43"
+  },
+  {
+   "type": "opt_asking",
+   "text": "Asking Nemotron-3_5-Lightning for a faster config ...",
+   "time": "05:19:43",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning",
+   "facts": "5431 tok/s, 5.7 ms/token, context 4,096 tokens, KV cache 878,256 tokens, max_num_seqs 128"
+  },
+  {
+   "type": "candidate",
+   "text": "Raising max_num_seqs to 256 (from 128, vLLM default) and gpu_memory_utilization to 0.9 (from 0.8) uses the ~3.5 GB GPU memory headroom (11.5/15 GB at 0.8) to improve 64-user batching throughput while staying well below the 0.98/1024 config that caused OOM, keeping 1-user latency increase far under 20%.",
+   "time": "05:20:12",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning",
+   "reason": "Raising max_num_seqs to 256 (from 128, vLLM default) and gpu_memory_utilization to 0.9 (from 0.8) uses the ~3.5 GB GPU memory headroom (11.5/15 GB at 0.8) to improve 64-user batching throughput while staying well below the 0.98/1024 config that caused OOM, keeping 1-user latency increase far under 20%.",
+   "changes": {
+    "gpu_memory_utilization": 0.9,
+    "max_num_seqs": 256
+   },
+   "removed": [],
+   "raw": "{\"changes\": {\"max_num_seqs\": 256, \"gpu_memory_utilization\": 0.9}, \"reason\": \"Raising max_num_seqs to 256 (from 128, vLLM default) and gpu_memory_utilization to 0.9 (from 0.8) uses the ~3.5 GB GPU memory headroom (11.5/15 GB at 0.8) to improve 64-user batching throughput while staying well below the 0.98/1024 config that caused OOM, keeping 1-user latency increase far under 20%.\", \"already_best\": false}"
+  },
+  {
+   "type": "running",
+   "text": "running Qwen/Qwen2.5-0.5B-Instruct (1.0 GB) with {'dtype': 'half', 'gpu_memory_utilization': 0.9, 'max_num_seqs': 256, 'max_model_len': 4096} ...",
+   "time": "05:20:12"
+  },
+  {
+   "type": "measured",
+   "text": "5,381 tok/s · 5.7 ms/token · accuracy 3/4 · not better",
+   "time": "05:22:03",
+   "ok": false,
+   "metrics": {
+    "tokens_per_s": 5381,
+    "ms_per_token": 5.7,
+    "gpu_memory_gb": 13.0,
+    "load_s": 92,
+    "accuracy": "3/4",
+    "context": 4096
+   }
+  },
+  {
+   "type": "opt_asking",
+   "text": "Asking Nemotron-3-Ultra-550b-a55b for a faster config ...",
+   "time": "05:22:03",
+   "nemotron": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "facts": "5431 tok/s, 5.7 ms/token, context 4,096 tokens, KV cache 878,256 tokens, max_num_seqs 128"
+  },
+  {
+   "type": "candidate",
+   "text": "The 64-request benchmark needs ~10,240 batched tokens (64 × 160) but max_num_batched_tokens is only 8192, forcing micro-batching; raising it to 16384 enables full-batch processing with negligible memory cost.",
+   "time": "05:22:10",
+   "nemotron": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "reason": "The 64-request benchmark needs ~10,240 batched tokens (64 × 160) but max_num_batched_tokens is only 8192, forcing micro-batching; raising it to 16384 enables full-batch processing with negligible memory cost.",
+   "changes": {
+    "max_num_batched_tokens": 16384
+   },
+   "removed": [],
+   "raw": "{\"changes\": {\"max_num_batched_tokens\": 16384}, \"reason\": \"The 64-request benchmark needs ~10,240 batched tokens (64 × 160) but max_num_batched_tokens is only 8192, forcing micro-batching; raising it to 16384 enables full-batch processing with negligible memory cost.\", \"already_best\": false}"
+  },
+  {
+   "type": "running",
+   "text": "running Qwen/Qwen2.5-0.5B-Instruct (1.0 GB) with {'dtype': 'half', 'gpu_memory_utilization': 0.8, 'max_num_seqs': 128, 'max_model_len': 4096, 'max_num_batched_tokens': 16384} ...",
+   "time": "05:22:10"
+  },
+  {
+   "type": "measured",
+   "text": "5,120 tok/s · 5.8 ms/token · accuracy 3/4 · not better",
+   "time": "05:23:59",
+   "ok": false,
+   "metrics": {
+    "tokens_per_s": 5120,
+    "ms_per_token": 5.8,
+    "gpu_memory_gb": 11.3,
+    "load_s": 90,
+    "accuracy": "3/4",
+    "context": 4096
+   }
+  },
+  {
+   "type": "opt_none",
+   "text": "None of the tested configs was faster, so the working config stays.",
+   "time": "05:23:59"
+  }
+ ]
+}

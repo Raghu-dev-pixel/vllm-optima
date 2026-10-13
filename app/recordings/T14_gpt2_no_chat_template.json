@@ -1,0 +1,83 @@
+{
+ "title": "T14 · GPT-2 without chat template: honest answer",
+ "model": "openai-community/gpt2",
+ "recorded": "2026-10-10",
+ "events": [
+  {
+   "type": "gpu",
+   "text": "Detected Tesla T4 x1 (15360 MiB, compute 7.5), vLLM 0.31.0",
+   "time": "04:55:17",
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   }
+  },
+  {
+   "type": "start",
+   "text": "Mode: beginner | starting settings: {'dtype': 'half'}",
+   "time": "04:55:17",
+   "mode": "beginner",
+   "start": {
+    "dtype": "half"
+   }
+  },
+  {
+   "type": "running",
+   "text": "running openai-community/gpt2 (0.5 GB) with {'dtype': 'half'} ...",
+   "time": "04:55:18"
+  },
+  {
+   "type": "failed",
+   "text": "FAILED: vllm.entrypoints.chat_utils.ChatTemplateResolutionError: As of transformers v4.44, default chat template is no longer allowed, so you must provide a chat template if the tokenizer does not define one.",
+   "time": "04:57:18",
+   "cause": "  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/renderers/hf.py\", line 795, in safe_apply_chat_template\n    raise ChatTemplateResolutionError(\nvllm.entrypoints.chat_utils.ChatTemplateResolutionError: As of transformers v4.44, default chat template is no longer allowed, so you must provide a chat template if the tokenizer does not define one.",
+   "log": "CEWISE):  55%|█████▍    | 28/51 [00:01<00:00, 23.96it/s]\nCapturing CUDA graphs (PIECEWISE):  61%|██████    | 31/51 [00:01<00:00, 24.14it/s]\nCapturing CUDA graphs (PIECEWISE):  67%|██████▋   | 34/51 [00:01<00:00, 23.30it/s]\nCapturing CUDA graphs (PIECEWISE):  73%|███████▎  | 37/51 [00:01<00:00, 23.34it/s]\nCapturing CUDA graphs (PIECEWISE):  78%|███████▊  | 40/51 [00:01<00:00, 24.19it/s]\nCapturing CUDA graphs (PIECEWISE):  84%|████████▍ | 43/51 [00:01<00:00, 24.80it/s]\nCapturing CUDA graphs (PIECEWISE):  90%|█████████ | 46/51 [00:01<00:00, 25.29it/s]\nCapturing CUDA graphs (PIECEWISE):  96%|█████████▌| 49/51 [00:02<00:00, 24.79it/s]\nCapturing CUDA graphs (PIECEWISE): 100%|██████████| 51/51 [00:02<00:00, 23.44it/s]\n\nCapturing CUDA graphs (FULL):   0%|          | 0/35 [00:00<?, ?it/s]\nCapturing CUDA graphs (FULL):   9%|▊         | 3/35 [00:00<00:01, 29.33it/s]\nCapturing CUDA graphs (FULL):  17%|█▋        | 6/35 [00:00<00:00, 29.39it/s]\nCapturing CUDA graphs (FULL):  26%|██▌       | 9/35 [00:00<00:00, 28.59it/s]\nCapturing CUDA graphs (FULL):  34%|███▍      | 12/35 [00:00<00:00, 27.43it/s]\nCapturing CUDA graphs (FULL):  43%|████▎     | 15/35 [00:00<00:00, 28.30it/s]\nCapturing CUDA graphs (FULL):  51%|█████▏    | 18/35 [00:00<00:00, 28.08it/s]\nCapturing CUDA graphs (FULL):  60%|██████    | 21/35 [00:00<00:00, 27.12it/s]\nCapturing CUDA graphs (FULL):  69%|██████▊   | 24/35 [00:00<00:00, 27.58it/s]\nCapturing CUDA graphs (FULL):  80%|████████  | 28/35 [00:00<00:00, 29.29it/s]\nCapturing CUDA graphs (FULL):  91%|█████████▏| 32/35 [00:01<00:00, 30.32it/s]\nCapturing CUDA graphs (FULL): 100%|██████████| 35/35 [00:01<00:00, 28.56it/s]\nTraceback (most recent call last):\n  File \"/content/test_run.py\", line 35, in <module>\n    llm.chat([chat(\"Hello\")] * 8, SamplingParams(max_tokens=16), use_tqdm=False)   # warm-up\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/entrypoints/llm.py\", line 694, in chat\n    return self._run_chat(\n           ^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/entrypoints/offline_utils.py\", line 379, in _run_chat\n    self._add_chat_requests(\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/entrypoints/offline_utils.py\", line 431, in _add_chat_requests\n    return self._render_and_add_requests(\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/entrypoints/offline_utils.py\", line 556, in _render_and_add_requests\n    raise e\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/entrypoints/offline_utils.py\", line 542, in _render_and_add_requests\n    for i, prompt in enumerate(prompts):\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/entrypoints/offline_utils.py\", line 433, in <genexpr>\n    self._preprocess_chat_one(\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/entrypoints/offline_utils.py\", line 236, in _preprocess_chat_one\n    (engine_input,) = self._preprocess_chat(\n                      ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/entrypoints/offline_utils.py\", line 215, in _preprocess_chat\n    _, engine_inputs = renderer.render_chat(\n                       ^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/renderers/base.py\", line 1240, in render_chat\n    self.render_messages(conversation, chat_params)\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/renderers/hf.py\", line 1023, in render_messages\n    prompt_raw = safe_apply_chat_template(\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/renderers/hf.py\", line 795, in safe_apply_chat_template\n    raise ChatTemplateResolutionError(\nvllm.entrypoints.chat_utils.ChatTemplateResolutionError: As of transformers v4.44, default chat template is no longer allowed, so you must provide a chat template if the tokenizer does not define one.\n"
+  },
+  {
+   "type": "asking",
+   "text": "Asking Nemotron-3_5-Lightning for a fix ...",
+   "time": "04:57:18",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning"
+  },
+  {
+   "type": "checking",
+   "text": "Nemotron wants to give up; checking the web first ...",
+   "time": "04:57:32"
+  },
+  {
+   "type": "search",
+   "text": "Searched the web (Tavily): 0 relevant result(s)",
+   "time": "04:57:32",
+   "results": []
+  },
+  {
+   "type": "give_up",
+   "text": "No working configuration found -> Transformers v4.44 requires an explicit chat template, which gpt2's tokenizer does not define, causing the error despite valid GPU settings.",
+   "time": "04:57:32",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning",
+   "source": ""
+  },
+  {
+   "type": "cannot_run",
+   "text": "CANNOT RUN openai-community/gpt2 on Tesla T4 (15360 MiB, x1)",
+   "time": "04:57:34",
+   "ok": false,
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   },
+   "mode": "beginner",
+   "model_id": "openai-community/gpt2",
+   "reason": "vllm.entrypoints.chat_utils.ChatTemplateResolutionError: As of transformers v4.44, default chat template is no longer allowed, so you must provide a chat template if the tokenizer does not define one.",
+   "advice": "Transformers v4.44 requires an explicit chat template, which gpt2's tokenizer does not define, causing the error despite valid GPU settings.",
+   "sources": [],
+   "next_steps": "Pass `--chat-template` with a valid template (e.g., `--chat-template \"{% for message in messages %}{{ message['role'] }}: {{ message['content'] }}{% endfor %}\"`) when starting the server.  \nUse a tokenizer that includes a chat template (e.g., `openai-community/gpt2` with a custom tokenizer.json that defines `chat_template`).  \nDowngrade transformers to <4.44 (e.g., `pip install \"transformers<4.44\"`) if you cannot modify the template or tokenizer."
+  }
+ ]
+}

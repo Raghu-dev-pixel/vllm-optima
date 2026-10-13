@@ -1,0 +1,134 @@
+{
+ "title": "T12 · Out of memory: fixed",
+ "model": "Qwen/Qwen2.5-0.5B-Instruct",
+ "recorded": "2026-10-10",
+ "events": [
+  {
+   "type": "gpu",
+   "text": "Detected Tesla T4 x1 (15360 MiB, compute 7.5), vLLM 0.31.0",
+   "time": "04:46:55",
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   }
+  },
+  {
+   "type": "start",
+   "text": "Mode: expert | starting settings: {'gpu_memory_utilization': 0.98, 'max_num_seqs': 1024}",
+   "time": "04:46:55",
+   "mode": "expert",
+   "start": {
+    "gpu_memory_utilization": 0.98,
+    "max_num_seqs": 1024
+   }
+  },
+  {
+   "type": "running",
+   "text": "running Qwen/Qwen2.5-0.5B-Instruct (1.0 GB) with {'gpu_memory_utilization': 0.98, 'max_num_seqs': 1024} ...",
+   "time": "04:46:56"
+  },
+  {
+   "type": "failed",
+   "text": "FAILED: (EngineCore pid=21567) ERROR 10-10 04:48:11 [core.py:1433] torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 594.00 MiB. GPU 0 has a total capacity of 14.56 GiB of which 447.75 MiB is free",
+   "time": "04:48:13",
+   "cause": "(EngineCore pid=21567) ERROR 10-10 04:48:11 [core.py:1433]     logits = torch.empty_like(logits, dtype=torch.float32).copy_(logits)\n(EngineCore pid=21567) ERROR 10-10 04:48:11 [core.py:1433]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n(EngineCore pid=21567) ERROR 10-10 04:48:11 [core.py:1433] torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 594.00 MiB. GPU 0 has a total capacity of 14.56 GiB of which 447.75 MiB is free. Including non-PyTorch memory, this process has 14.12 GiB memory in use. Of the allocated memory 13.86 GiB is allocated by PyTorch, and 80.17 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)\n\nLoading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]\n",
+   "log": "ns(grammar_output)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/torch/utils/_contextlib.py\", line 124, in decorate_context\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/worker/gpu/eplb_utils.py\", line 27, in wrapper\n    result = fn(self, *args, **kwargs)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/worker/gpu/model_runner.py\", line 2096, in sample_tokens\n    sampler_output, num_sampled, num_rejected = self.sample(\n                                                ^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/worker/gpu/model_runner.py\", line 1600, in sample\n    sampler_output = self.sampler(logits, input_batch)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/worker/gpu/sample/sampler.py\", line 154, in __call__\n    sampled, processed_logits = self.sample(\n                                ^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/worker/gpu/sample/sampler.py\", line 287, in sample\n    processed_logits = self.apply_sampling_params(\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/worker/gpu/sample/sampler.py\", line 239, in apply_sampling_params\n    logits = torch.empty_like(logits, dtype=torch.float32).copy_(logits)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntorch.OutOfMemoryError: CUDA out of memory. Tried to allocate 594.00 MiB. GPU 0 has a total capacity of 14.56 GiB of which 447.75 MiB is free. Including non-PyTorch memory, this process has 14.12 GiB memory in use. Of the allocated memory 13.86 GiB is allocated by PyTorch, and 80.17 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)\nTraceback (most recent call last):\n  File \"/content/test_run.py\", line 13, in <module>\n    llm = LLM(model=model, **settings)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/entrypoints/llm.py\", line 344, in __init__\n    self.llm_engine = LLMEngine.from_engine_args(\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/llm_engine.py\", line 185, in from_engine_args\n    return cls(\n           ^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/llm_engine.py\", line 111, in __init__\n    self.engine_core = EngineCoreClient.make_client(\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core_client.py\", line 126, in make_client\n    return SyncMPClient(\n           ^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/tracing/otel.py\", line 175, in sync_wrapper\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core_client.py\", line 917, in __init__\n    super().__init__(\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/core_client.py\", line 674, in __init__\n    with launch_core_engines(\n  File \"/usr/lib/python3.12/contextlib.py\", line 144, in __exit__\n    next(self.gen)\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/utils.py\", line 1268, in launch_core_engines\n    wait_for_engine_startup(\n  File \"/content/vllm-env/lib/python3.12/site-packages/vllm/v1/engine/utils.py\", line 1348, in wait_for_engine_startup\n    raise RuntimeError(\nRuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}\n"
+  },
+  {
+   "type": "asking",
+   "text": "Asking Nemotron-3_5-Lightning for a fix ...",
+   "time": "04:48:13",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning"
+  },
+  {
+   "type": "fix",
+   "text": "Fix 1: Tesla T4 does not support bfloat16, so dtype must be half; lowering gpu_memory_utilization and max_num_seqs reduces GPU memory pressure to fit within the 15 GB device.",
+   "time": "04:48:17",
+   "nemotron": "nvidia/Nemotron-3_5-Lightning",
+   "reason": "Tesla T4 does not support bfloat16, so dtype must be half; lowering gpu_memory_utilization and max_num_seqs reduces GPU memory pressure to fit within the 15 GB device.",
+   "source": "",
+   "changes": {
+    "dtype": "half",
+    "gpu_memory_utilization": 0.8,
+    "max_num_seqs": 128
+   },
+   "removed": [],
+   "new_model": null
+  },
+  {
+   "type": "running",
+   "text": "running Qwen/Qwen2.5-0.5B-Instruct (1.0 GB) with {'dtype': 'half', 'gpu_memory_utilization': 0.8, 'max_num_seqs': 128} ...",
+   "time": "04:48:18"
+  },
+  {
+   "type": "done",
+   "text": "WORKS on Tesla T4 (expert mode, fixed after 1 failure(s))",
+   "time": "04:49:13",
+   "ok": true,
+   "gpu": {
+    "name": "Tesla T4",
+    "memory": "15360 MiB",
+    "compute_capability": "7.5",
+    "count": 1,
+    "vllm_version": "0.31.0"
+   },
+   "mode": "expert",
+   "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+   "model": "Qwen/Qwen2.5-0.5B-Instruct",
+   "settings": {
+    "dtype": "half",
+    "gpu_memory_utilization": 0.8,
+    "max_num_seqs": 128
+   },
+   "start": {
+    "gpu_memory_utilization": 0.98,
+    "max_num_seqs": 1024
+   },
+   "metrics": {
+    "tokens_per_s": 5325,
+    "ms_per_token": 5.8,
+    "gpu_memory_gb": 11.5,
+    "load_s": 37,
+    "accuracy": "3/4",
+    "context": 32768
+   },
+   "rows": [
+    {
+     "setting": "dtype",
+     "requested": "(default)",
+     "delivered": "half",
+     "changed": true
+    },
+    {
+     "setting": "gpu_memory_utilization",
+     "requested": 0.98,
+     "delivered": 0.8,
+     "changed": true
+    },
+    {
+     "setting": "max_num_seqs",
+     "requested": 1024,
+     "delivered": 128,
+     "changed": true
+    }
+   ],
+   "failures": 1,
+   "lessons": 8,
+   "sources": [],
+   "engine": {
+    "kv_cache_tokens": 878592,
+    "max_num_seqs": 128,
+    "max_num_batched_tokens": 8192,
+    "gpu_memory_utilization": 0.8
+   },
+   "causes": [
+    "torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 594.00 MiB. GPU 0 has a total capacity of 14.56 GiB of which 447.75 MiB is free"
+   ],
+   "inference_py": "# Tested by the agent on: Tesla T4 x1, vLLM 0.31.0\n# Use the same GPU type and vLLM version, or run the agent again on your GPU.\nfrom vllm import LLM, SamplingParams\n\nif __name__ == \"__main__\":\n    llm = LLM(model='Qwen/Qwen2.5-0.5B-Instruct', **{'dtype': 'half', 'gpu_memory_utilization': 0.8, 'max_num_seqs': 128})\n    out = llm.chat([{\"role\": \"user\", \"content\": \"Hello! Who are you?\"}],\n                   SamplingParams(temperature=0.7, max_tokens=128))\n    print(out[0].outputs[0].text)\n",
+   "requirements": "vllm==0.31.0\n"
+  }
+ ]
+}
