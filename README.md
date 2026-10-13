@@ -7,7 +7,7 @@
 **Give it any model: it fixes what breaks, makes it faster, and proves every change on your GPU.**
 
 [**▶ Live demo (recorded runs)**](LINK_TO_HF_SPACE) &nbsp;·&nbsp;
-[**Open in Colab**](LINK_TO_COLAB) &nbsp;·&nbsp;
+[**Open in Colab**](https://colab.research.google.com/github/Raghu-dev-pixel/vllm-optima/blob/main/colab/quickstart.ipynb) &nbsp;·&nbsp;
 [**3-min video**](LINK_TO_YOUTUBE) &nbsp;·&nbsp;
 [**Test plan (30 cases)**](docs/vllm_optima_test_plan.xlsx)
 
@@ -275,50 +275,22 @@ Open the [**live demo**](LINK_TO_HF_SPACE), choose any of the 29 recorded runs, 
 
 ### Option B: Google Colab (free T4, ~10 min first-time setup)
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](LINK_TO_COLAB)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Raghu-dev-pixel/vllm-optima/blob/main/colab/quickstart.ipynb)
 
-1. **Choose a GPU:** *Runtime → Change runtime type → T4 GPU*.
-2. **Add your keys** in Colab **Secrets** (🔑 icon on the left):
+1. Click **Open in Colab** above. The notebook is [`colab/quickstart.ipynb`](colab/quickstart.ipynb).
+2. **Choose a GPU:** *Runtime → Change runtime type → T4 GPU*.
+3. **Add your keys** in Colab **Secrets** (🔑 icon on the left):
    - `NEBIUS_API_KEY`: required ([Nebius Token Factory](https://tokenfactory.nebius.com))
    - `TAVILY_API_KEY`: optional (web search for unknown errors)
-3. **Run the cells in order:**
-
-   ```python
-   # 1. Check the GPU
-   !nvidia-smi --query-gpu=name,memory.total,compute_cap --format=csv
-   ```
-   ```python
-   # 2. Get the code, and install vLLM in its own environment (takes a few minutes)
-   !git clone LINK_TO_REPO vllm-optima
-   !pip install -q uv
-   !uv venv /content/vllm-env --python 3.12
-   !uv pip install --python /content/vllm-env/bin/python vllm==0.31.0
-   !pip install -q -r vllm-optima/app/requirements.txt
-   ```
-   ```python
-   # 3. Load keys from Colab Secrets (never paste keys into the notebook)
-   import os
-   from google.colab import userdata
-   os.environ["NEBIUS_API_KEY"] = userdata.get("NEBIUS_API_KEY")
-   try:
-       os.environ["TAVILY_API_KEY"] = userdata.get("TAVILY_API_KEY")
-   except Exception:
-       pass   # web search stays off
-   ```
-   ```python
-   # 4. Launch the app (prints a public gradio.live link)
-   %cd vllm-optima/app
-   import app
-   app.demo.queue().launch(share=True)
-   ```
-4. **Open the link** and try a model, e.g. `Qwen/Qwen2.5-0.5B-Instruct`, or paste a broken config such as `{"dtype": "bfloat16", "kv_cache_dtype": "fp8"}` and watch the agent fix it.
+4. **Run the 4 cells in order:** check the GPU → clone the repo and install vLLM 0.31.0 in its own environment → load your keys → start the app.
+5. **Open the public link** (`https://….gradio.live`) and try a model, e.g. `Qwen/Qwen2.5-0.5B-Instruct`, or paste a broken config such as `{"dtype": "bfloat16", "kv_cache_dtype": "fp8"}` and watch the agent fix it.
 
 > [!TIP]
 > If Colab has no free T4 available, Option A still shows every scenario.
 
 ### Option C: your own NVIDIA GPU
 ```bash
-git clone LINK_TO_REPO && cd vllm-optima/app
+git clone https://github.com/Raghu-dev-pixel/vllm-optima && cd vllm-optima/app
 python -m venv ~/vllm-env && ~/vllm-env/bin/pip install vllm==0.31.0
 pip install -r requirements.txt
 export VLLM_PYTHON=~/vllm-env/bin/python NEBIUS_API_KEY=...  TAVILY_API_KEY=...   # Tavily optional
@@ -367,8 +339,7 @@ vllm-optima/
 │   └── quickstart.ipynb    # 4-cell Colab notebook
 ├── docs/
 │   ├── images/             # Screenshots used in this README
-│   ├── vllm_optima_test_plan.xlsx
-│   └── architecture.png
+│   └── vllm_optima_test_plan.xlsx
 ├── LICENSE                 # MIT
 └── README.md
 ```
