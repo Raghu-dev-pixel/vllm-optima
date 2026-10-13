@@ -1,0 +1,12 @@
+   # Secrets - never commit keys
+   .env
+   *.env
+   *secret*
+   *key*.txt
+
+   # Runtime output
+   lessons.json
+   runs/
+   __pycache__/
+   *.pyc
+   .ipynb_checkpoints/
