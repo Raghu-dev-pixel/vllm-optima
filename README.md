@@ -26,7 +26,7 @@ Powered by **NVIDIA Nemotron** on **Nebius Token Factory** · Web search by **Ta
 | **Output** | A tested `inference.py`, a `requirements.txt`, and measured throughput, latency, memory, context and accuracy. If nothing can work, an honest answer with the reason and sources |
 | **Brain** | NVIDIA Nemotron 3.5 Lightning (fast first fixes) + Nemotron 3 Ultra (hard cases, second opinions), served by Nebius Token Factory |
 | **Proof** | Every proposed change is run on the real GPU and measured. The model proposes; only the measurements decide |
-| **Tested** | 30 scenarios on a Tesla T4 → **29 passed, 0 failed** (1 not run); **29 recorded runs** anyone can replay without a GPU |
+| **Tested** | 30 scenarios on a Tesla T4 → **30 of 30 passed**; **29 recorded runs** anyone can replay without a GPU |
 | **Best results** | **4.3×** throughput on a throttled config · **3.4×** by removing a slow user setting · **2.0×** on a 7B model · context **8,192 → 12,000** tokens at the same speed |
 
 ---
@@ -228,8 +228,8 @@ This file was also run on its own, unchanged, with plain vLLM on the T4, and pri
 | Web search and honest answers (GPT-2, custom code, gated model, removed settings) | 6 | 6 passed |
 | Lessons (same error twice → no second search) | 1 | 1 passed |
 | Optimizer | 9 | 9 passed |
-| Replay without GPU | 1 | not run in Colab (all 29 recordings replay offline) |
-| **Total** | **30** | **29 passed · 0 failed · 1 not run** |
+| Replay without GPU (in the app on Colab) | 1 | 1 passed |
+| **Total** | **30** | **30 passed · 0 failed** |
 
 **Optimizer: verified gains**
 
