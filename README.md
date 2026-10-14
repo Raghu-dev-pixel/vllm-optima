@@ -6,7 +6,7 @@
 
 **Give it any model: it fixes what breaks, makes it faster, and proves every change on your GPU.**
 
-[**▶ Live demo (recorded runs)**](LINK_TO_HF_SPACE) &nbsp;·&nbsp;
+[**▶ Live demo (recorded runs)**](https://huggingface.co/spaces/raghu-dev-pixel/vllm-optima-demo) &nbsp;·&nbsp;
 [**Open in Colab**](https://colab.research.google.com/github/Raghu-dev-pixel/vllm-optima/blob/main/colab/quickstart.ipynb) &nbsp;·&nbsp;
 [**3-min video**](LINK_TO_YOUTUBE) &nbsp;·&nbsp;
 [**Test plan (30 cases)**](docs/vllm_optima_test_plan.xlsx)
@@ -168,7 +168,7 @@ All reasoning runs on **NVIDIA Nemotron through Nebius Token Factory** (OpenAI-c
 
 ## 7. See it work: five runs
 
-All screenshots are from real runs on a Tesla T4. Each one can be replayed in the [live demo](LINK_TO_HF_SPACE).
+All screenshots are from real runs on a Tesla T4. Each one can be replayed in the [live demo](https://huggingface.co/spaces/raghu-dev-pixel/vllm-optima-demo).
 
 ### 7.1 Works first time (beginner mode)
 <!-- SCREENSHOT: docs/images/01_default.png  (recording T01_small_model) -->
@@ -271,7 +271,7 @@ Models covered: **6 families from 0.5B to 32B** (Qwen2.5, Phi-3.5, SmolLM2, Llam
 ## 10. Run it yourself
 
 ### Option A: replay demo (no GPU, no keys)
-Open the [**live demo**](LINK_TO_HF_SPACE), choose any of the 29 recorded runs, and watch the agent work step by step.
+Open the [**live demo**](https://huggingface.co/spaces/raghu-dev-pixel/vllm-optima-demo), choose any of the 29 recorded runs, and watch the agent work step by step.
 
 ### Option B: Google Colab (free T4, ~10 min first-time setup)
 
