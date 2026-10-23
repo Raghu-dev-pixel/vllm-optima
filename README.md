@@ -31,20 +31,46 @@ Powered by **NVIDIA Nemotron** on **Nebius Token Factory** · Web search by **Ta
 
 ---
 
+## How it works, in one picture
+
+<p align="center"><img src="docs/images/06_how_it_works.png" width="100%" alt="vLLM Optima: Your GPU → Root cause → Nemotron on Nebius Token Factory (with Tavily web search) → Run again → Verified"></p>
+
+Read the diagram left to right. Each box is one step the agent takes:
+
+| # | Block | What happens | Who does it |
+|---|---|---|---|
+| 1 | **Your GPU** | vLLM is started with your model (and your settings, if you gave any) on the real GPU, in a separate process | The harness (`test_run.py`) |
+| 2 | **Root cause** | If vLLM crashes, the real error is pulled out of hundreds of log lines; harmless warnings are ignored | The agent (`agent.py`) |
+| 3a | **Nemotron 3.5 Lightning** | Reads the error, the GPU facts and the current settings, and proposes the smallest fix, in seconds | NVIDIA Nemotron on **Nebius Token Factory** |
+| 3b | **Nemotron 3 Ultra · 550B** | Takes over when Lightning's fix doesn't work; also gives a second opinion on optimizations | NVIDIA Nemotron on **Nebius Token Factory** |
+| 4 | **Tavily web search** | For errors the agent doesn't recognise, searches the web and passes the sources to Nemotron | Tavily |
+| 5 | **Run again** | The proposed settings are run on the GPU and measured: speed, memory, context length, accuracy | The harness |
+| 6 | **Verified** | Only a config that actually ran is delivered, as a tested `inference.py` plus metrics | The agent |
+
+**If it still fails,** Ultra retries up to 4 attempts in total. If nothing can work (for example, the model needs access approval, or it is too big for the GPU), the agent gives an **honest answer** with the reason, sources and next steps instead of guessing.
+
+**Nemotron proposes · the GPU proves.** The language model never decides whether a fix worked; only the measurement on the GPU does.
+
+**Who it's for:** developers, researchers and small teams who want to run open models on **their own** GPU (a workstation, a cloud VM or a free Colab T4) without spending hours on vLLM settings.
+
+The full flow, with every decision point and the optimizer, is in [Detailed architecture](#5-detailed-architecture).
+
+---
+
 ## Contents
 
 1. [Background: LLMs and vLLM](#1-background-llms-and-vllm)
 2. [The problem](#2-the-problem-running-a-model-on-your-gpu-is-trial-and-error)
 3. [Why vLLM, not TensorRT-LLM, for this demo](#3-why-vllm-not-tensorrt-llm-for-this-demo)
 4. [What vLLM Optima does](#4-what-vllm-optima-does)
-5. [Architecture](#5-architecture)
+5. [Detailed architecture](#5-detailed-architecture)
 6. [How NVIDIA Nemotron and Nebius Token Factory are used](#6-how-nvidia-nemotron-and-nebius-token-factory-are-used)
 7. [See it work: five runs](#7-see-it-work-five-runs)
 8. [Results](#8-results)
 9. [Prior work and how this differs](#9-prior-work-and-how-this-differs)
 10. [Run it yourself](#10-run-it-yourself)
 11. [Design principles](#11-design-principles-honesty-and-safety)
-12. [Limitations and roadmap](#12-limitations-and-roadmap)
+12. [Current limits and roadmap](#12-current-limits-and-roadmap)
 13. [Repository layout](#13-repository-layout)
 
 ---
@@ -109,7 +135,7 @@ Each failed attempt costs minutes of model loading, then a search through logs, 
 
 ---
 
-## 5. Architecture
+## 5. Detailed architecture
 
 ```mermaid
 flowchart LR
@@ -168,37 +194,22 @@ All reasoning runs on **NVIDIA Nemotron through Nebius Token Factory** (OpenAI-c
 
 ## 7. See it work: five runs
 
-All screenshots are from real runs on a Tesla T4. Each one can be replayed in the [live demo](https://huggingface.co/spaces/raghu-dev-pixel/vllm-optima-demo).
+All screenshots are from real runs on a Tesla T4. Click any image to enlarge it, or replay the run in the [live demo](https://huggingface.co/spaces/raghu-dev-pixel/vllm-optima-demo).
 
-### 7.1 Works first time (beginner mode)
-<!-- SCREENSHOT: docs/images/01_default.png  (recording T01_small_model) -->
-![Default run](docs/images/01_default.png)
+<table>
+<tr>
+<td width="33%" valign="top"><b>Works first time</b><br><a href="docs/images/01_default.png"><img src="docs/images/01_default.png" width="100%" alt="Works first time"></a><br><sub><code>T01</code> · Qwen 0.5B, model name only: 5,349 tok/s, no Nemotron call needed</sub></td>
+<td width="33%" valign="top"><b>Out of memory → fixed</b><br><a href="docs/images/02_oom.png"><img src="docs/images/02_oom.png" width="100%" alt="Out of memory → fixed"></a><br><sub><code>T12</code> · 0.98 memory / 1,024 seqs crash; Nemotron sets 0.8 / 128 → 5,325 tok/s</sub></td>
+<td width="33%" valign="top"><b>Web search → honest answer</b><br><a href="docs/images/03_tavily.png"><img src="docs/images/03_tavily.png" width="100%" alt="Web search → honest answer"></a><br><sub><code>T19</code> · Gated Llama: Tavily finds 3 sources; reason, next steps, source link</sub></td>
+</tr>
+</table>
 
-`Qwen/Qwen2.5-0.5B-Instruct`, model name only. vLLM defaults plus `dtype: half` for the T4: **works first time, 5,349 tok/s, 5.8 ms/token, 32k context**. No Nemotron call is needed when nothing breaks.
-
-### 7.2 Out of memory → fixed
-<!-- SCREENSHOT: docs/images/02_oom.png  (recording T12_out_of_memory) -->
-![Out of memory fixed](docs/images/02_oom.png)
-
-Expert settings `gpu_memory_utilization: 0.98, max_num_seqs: 1024` crash with CUDA out of memory. Nemotron lowers them to **0.8 and 128**, and the agent verifies **5,325 tok/s**: fixed without being over-cautious.
-
-### 7.3 Unknown error → web search → answer with sources
-<!-- SCREENSHOT: docs/images/03_tavily.png  (recording T19_gated_llama) -->
-![Tavily web search](docs/images/03_tavily.png)
-
-`meta-llama/Llama-3.2-1B-Instruct` is a gated model. One vLLM run fails, and before giving up the agent checks the web: **Tavily finds 3 relevant results**. The agent stops with the real reason (the repository needs access approval), next steps and a source link, and no wasted re-runs.
-
-### 7.4 Optimize for this GPU → 4.3× faster, verified
-<!-- SCREENSHOT: docs/images/04_optimize.png  (recording T24_opt_4x) -->
-![Optimizer 4.3x](docs/images/04_optimize.png)
-
-A working but throttled config (`max_num_seqs: 8`). One click on **Optimize**: Nemotron reads the measured numbers, proposes one change, and the agent measures **1,239 → 5,308 tok/s (4.3×)** before accepting it.
-
-### 7.5 Honest give-up
-<!-- SCREENSHOT: docs/images/05_give_up.png  (recording T03_32b_cannot_run) -->
-![Honest give-up](docs/images/05_give_up.png)
-
-`Qwen/Qwen2.5-32B-Instruct` on a 15 GB GPU. The size check skips the 65.5 GB download, and Nemotron confirms that even a 4-bit version (~16.4 GB) leaves no room for the KV cache. Instead of a crash loop, the agent says **"no working configuration found"**, with the reason and the fix: a GPU with ~18 GB or more.
+<table>
+<tr>
+<td width="50%" valign="top"><b>Optimize → 4.3× faster</b><br><a href="docs/images/04_optimize.png"><img src="docs/images/04_optimize.png" width="100%" alt="Optimize → 4.3× faster"></a><br><sub><code>T24</code> · One click: max_num_seqs 8 → 64, measured 1,239 → 5,308 tok/s</sub></td>
+<td width="50%" valign="top"><b>Honest give-up</b><br><a href="docs/images/05_give_up.png"><img src="docs/images/05_give_up.png" width="100%" alt="Honest give-up"></a><br><sub><code>T03</code> · Qwen 32B on 15 GB: skips the 65.5 GB download, explains what GPU is needed</sub></td>
+</tr>
+</table>
 
 ### What you get at the end of a run
 
@@ -310,18 +321,22 @@ SHARE=1 python app.py
 
 ---
 
-## 12. Limitations and roadmap
+## 12. Current limits and roadmap
 
-**Known limitations**
-- Tested on one GPU type (Tesla T4) and vLLM 0.31.0. Results on other GPUs need a fresh run, which is what the agent is for.
-- Nemotron's answers can vary between runs: a fix is always valid (it's measured) but not always the maximum. For example, a context of 8,192 was accepted where ~12,000 fit; the optimizer recovers it.
-- The optimizer tunes for a fixed workload (64 requests × 128 tokens). Real traffic may differ.
+vLLM Optima is honest about what it does today, and each limit below is already on the roadmap:
+
+| Current limit | Why it's like this | Next step |
+|---|---|---|
+| **Tested on one GPU type** (Tesla T4, vLLM 0.31.0) | The T4 is free for everyone and the hardest test case. Multi-GPU support is built in, but not tested yet | Run the same 30-test plan on H100, L40S and multi-GPU on Nebius AI Cloud |
+| **One benchmark workload** (64 requests × 128 tokens, 4-question accuracy check) | Keeps every run fast and comparable | Tune for your own prompts and latency targets |
+| **Some problems can't be fixed with settings** (gated models, models too big for the GPU, models needing custom code) | No vLLM setting can solve them, so the agent gives an **honest answer** with the reason and next steps instead of a broken config | – (by design) |
+| **Nemotron's suggestions can vary between runs** | Every fix is measured on the GPU, so a delivered config always works; the optimizer then looks for a faster one | More candidates per optimization round |
 
 **Roadmap**
 - **TensorRT-LLM** as a second engine, using the same loop.
 - **Bigger GPUs:** H100, L40S and multi-GPU (tensor parallel) on Nebius AI Cloud.
-- **Custom workloads:** tune for your own prompt lengths and latency targets.
-- **pip package and CLI:** `vllm-optima fix <model>` in CI pipelines.
+- **Your own workload:** tune for your real prompt lengths and latency targets.
+- **pip package and CLI:** `vllm-optima fix <model>` to check every deployment in CI.
 
 ---
 
@@ -338,7 +353,7 @@ vllm-optima/
 ├── colab/
 │   └── quickstart.ipynb    # 4-cell Colab notebook
 ├── docs/
-│   ├── images/             # Screenshots used in this README
+│   ├── images/             # Screenshots and the block diagram used in this README
 │   └── vllm_optima_test_plan.xlsx
 ├── LICENSE                 # MIT
 └── README.md
