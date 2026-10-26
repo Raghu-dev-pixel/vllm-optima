@@ -8,7 +8,7 @@
 
 [**▶ Live demo (recorded runs)**](https://huggingface.co/spaces/raghu-dev-pixel/vllm-optima-demo) &nbsp;·&nbsp;
 [**Open in Colab**](https://colab.research.google.com/github/Raghu-dev-pixel/vllm-optima/blob/main/colab/quickstart.ipynb) &nbsp;·&nbsp;
-[**3-min video**](LINK_TO_YOUTUBE) &nbsp;·&nbsp;
+[**3-min video**](https://youtu.be/9UDvpRGtQhg) &nbsp;·&nbsp;
 [**Test plan (30 cases)**](docs/vllm_optima_test_plan.xlsx)
 
 Built for the **Nebius × NVIDIA Global AI Hackathon** · Track: *Coding and Agentic Engineering*
